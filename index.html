@@ -1,13 +1,16 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html> <head>
-<title></title>
-</head>
+---
+layout: default
+title: Damien Krotkine (dams)
+---
 
-<body>
-<h1>Woa</h1>
+<div id="home">
+  <h1>Blog Posts</h1>
+  <ul class="posts">
+    {% for post in site.posts %}
+      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
 
-That's cool.
-
-
-<hr>
-</body> </html>
+  <h1>Books</h1>
+  <h1>Prominent Open Source Projects</h1>
+</div>
