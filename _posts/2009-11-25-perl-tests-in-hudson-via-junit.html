@@ -1,0 +1,59 @@
+---
+layout: post
+title: Perl tests in Hudson via JUnit
+published: 1
+category:
+  - Perl
+---
+<p></p><h2>Perl tests in Hudson</h2>
+
+<p>I&#39;m willing to automate the unit testing of my Perl modules, by plugging them into <a href="http://hudson-ci.org/">Hudson</a>. Hudson is a continuous integration server, it &quot;<em>monitors executions of repeated jobs, such as building a software project or jobs run by cron</em>&quot;. It works well, is extensible, and looks good.</p>
+
+<p>So, The easiest way to do that is have Hudson to execute the module test suite, and look at the output. Actually, not really the output, but a file containing the output of the tests, in <a href="http://www.junit.org/">JUnit</a> format.</p>
+
+<p>Now, by default, Perl unit tests doesn&#39;t output JUnit. You know, that kind of stuff :</p>
+
+<script src="http://gist.github.com/242615.js?file=gistfile1.txt"></script>
+
+<p>That&#39;s the standard output of tests run through TAP, the <a href="http://testanything.org/wiki/index.php/Main_Page">Test Anything Protocol</a>, which is great, and (imho) better than JUnit.</p>
+
+<p>Anyway, that output is generated because the tests are run through <a href="http://search.cpan.org/perldoc?TAP::Harness">TAP::Harness</a>, that outputs the result in TAP format on the console.</p>
+
+<p>So first of all, let&#39;s see how to transform the tests output into JUnit. My modules use <a href="http://search.cpan.org/perldoc?Module::Build">Module::Build</a> (and also <a href="http://search.cpan.org/perldoc?Dist::Zilla">Dist::Zilla</a>, but that&#39;s an other story) as building and releasing system. When using Module::Build, running the test suite is easy :</p>
+
+<script src="http://gist.github.com/242619.js?file=gistfile1.txt"></script>
+
+<h2>Solution 1 : use TAP::Formatter::JUnit</h2>
+
+<p>After some research and looking in the source code, I discovered that you can pass a lot of options to TAP::Harness, via Module::Build. Especially, you can specify a formatter to TAP::Harness when running the test suite. TAP formatters are modules that all inherit of TAP::Formatter::Base.</p>
+
+<p>For instance, if instead of outputing the result on the console, you want it to be stored in a file, use <a href="http://search.cpan.org/perldoc?TAP::Formatter::File">TAP::Formatter::File</a>. As you may have guessed now, there is a formatter that outputs JUnit : <a href="http://search.cpan.org/perldoc?TAP::Formatter::JUnit">TAP::Formatter::Junit</a>. That&#39;s exactly what we want. By issuing the following command line, the output of the test suite is in JUnit format.</p>
+
+<script src="http://gist.github.com/242627.js?file=gistfile1.sh"></script><p>
+
+ Now we just need to tell Hudson to run it and look at the output </p>
+
+<h2>Solution 2 : use TAP::Harness::JUnit</h2>
+
+<p>For some reasons, I had some trouble with TAP::Formatter::Junit on windows, mainly because there is no ActiveState PPM for this package. So I decided to give a go with <a href="http://search.cpan.org/dist/TAP-Harness-JUnit/">TAP::Harness::JUnit</a></p>
+
+<p>Its documentation is self-explanatory : it&#39;s a child class of TAP::Harness, that accepts an xml file name as argument, and procudes directly a JUnit output. This module being directly available in ActiveState Perl, it seemed to be aa good approach.</p>
+
+<p>So the goal is to replace the call to TAP::Harness into TAP::Harness::JUnit, when doing Build test. And actually, it would be better to have an additional action to Build, so that we could do Build test, and Build hudson_test.</p>
+
+<p>Luckily, Module::Build makes it easy to add an action. By looking at the ACTION_test method in Module::Build::Base, it&#39;s easy to see what needs to be changed. See this code snippet. What we want is a copy of that code that would run TAP::Harness::JUnit instead of TAP::Harness.</p>
+
+<script src="http://gist.github.com/242842.js?file=gistfile1.pl"></script>
+
+<p>After some work, here is what I eneded with. This code is to be added into your Build.PL.</p>
+
+<script src="http://gist.github.com/242852.js?file=gistfile1.pl"></script>
+
+<p>Now, build and run your tests in hudson mode</p>
+
+<script src="http://gist.github.com/242855.js?file=gistfile1.txt"></script>
+
+<h2>Configure Hudson</h2>
+
+<p>That&#39;s the easiest part : Setup a new project, add as execution line &quot;<span style="font-family: Courier;">perl Build.PL &amp; Build hudson_test</span>&quot; (if you are on a windows hudson node). And point the project to the output file called &quot;hudson_test_output.xml&quot;. That&#39;s it !</p><p><a href="http://damien.krotkine.com/.a/6a0120a63366ed970b012875d92f9e970c-popup" onclick="window.open( this.href, &#39;_blank&#39;, &#39;width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0&#39; ); return false" style="display: inline;"><img alt="Image 57" class="asset asset-image at-xid-6a0120a63366ed970b012875d92f9e970c " src="http://damien.krotkine.com/.a/6a0120a63366ed970b012875d92f9e970c-320wi" /></a> <br /> </p>
+

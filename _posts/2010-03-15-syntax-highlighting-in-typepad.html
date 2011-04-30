@@ -1,0 +1,141 @@
+---
+layout: post
+title: Syntax Highlighting in Typepad
+published: 1
+category:
+  - All
+---
+<p></p><h1>Code Snippets, Syntax Highlighting, Source examples, Verbatim text, etc...</h1>I&#39;m sure I&#39;m not the only one to need to display nice clean and compatible code snippets, source code examples, and similar stuff. I&#39;m using Typepad as blog engine, but what I&#39;ll explain here should work with MovableType as well (as the former is a professional version of the open source latter one).<p>First of all, the needs :</p>
+
+<ul>
+<li>I need a tool to display code snippets, examples,</li>
+<li>It has to be easy to use,</li>
+<li>It has to be nice</li>
+<li>It should have syntax highlighting and coloring</li>
+<li>It has to support Perl, Javascript, and ruby syntax</li>
+<li>It has to allow download and view as text</li>
+<li>It has to degrade properly, so that it works in RSS clients</li>
+</ul>
+<p>The solution is of course <a href="http://alexgorbatchev.com/wiki/SyntaxHighlighter">SyntaxHighlighter</a>, the well known tool by <a href="http://alexgorbatchev.com">Alex Gorbatchev</a>. This tool is used <a href="http://alexgorbatchev.com/wiki/SyntaxHighlighter:Spotlight">widely </a>and some people have already written on <a href="http://www.jontesays.com/jonte-says/2009/03/adding-syntaxhighlighter-to-a-typepad-pro-account-using-advanced-templates.html">including it in Movable Type</a>, or even <a href="http://www.jontesays.com/jonte-says/2009/03/adding-syntaxhighlighter-to-a-typepad-pro-account-using-advanced-templates.html">in Typepad</a>.</p>
+
+<p>But I thought I would write on it as well, because there are some subtleties, and both SyntaxHighlighter and Typepad evolved since these entries were created.</p>
+
+<p>So, if you don&#39;t know this too yet, or are too lazy to check its description page, SyntaxHighlighter is a pure JavaScript + CSS tool that finds and renders content, from a specific standard HTML tag you specify.&#0160;</p>
+
+<h1>Example</h1>
+
+<p><code class="brush: perl">
+# Some Perl code<br />
+my $var = 42;<br />
+my @array = map { reverse }<br />
+ grep { length }<br />
+ @strings;<br /><br />
+
+sub my_function {<br />
+ my ($a, $b) = @_;<br />
+ return ($a * $b);<br />
+}
+</code></p>
+
+<h1>Download</h1><p>First of all, you <strong>don&#39;t</strong> want to download SyntaxHighlighter 
+from it &quot;<em>official</em>&quot; google code home, <span style="text-decoration: line-through;">because it&#39;s hosted by Google</span>
+ (sorry, just kidding) because only the version 1.5 is available there. 
+What we want is <strong>version 2.0</strong>, which has more features, and 
+includes a Perl syntax <em>brush</em> by default (so no need to get it 
+from elsewhere).</p>
+
+<p>Download SyntaxHighlighter from <a href="http://alexgorbatchev.com/wiki/SyntaxHighlighter:Download" title="download page for SyntaxHighlighter">this page</a>. I downloaded version <a href="http://alexgorbatchev.com/downloads/grab.php?name=sh" title="version 2.1.364 of SyntaxHighlighter">2.1.364</a> (<a href="http://damien.krotkine.com/files/syntaxhighlighter_2.1.364.zip" title="version 2.1.364 of SyntaxHighlighter">local copy here</a> in case the site is down)</p>
+
+<p></p><h1>Upload to your TypePad Account</h1>Next, you need to upload the files to your TypePad File Manager. You&#39;ll find it in the Library Tab.<br /><p><a href="http://damien.krotkine.com/.a/6a0120a63366ed970b0120a93a0550970b-pi" onclick="window.open(this.href,&#39;_blank&#39;,&#39;scrollbars=no,resizable=yes,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0&#39;);
+ return false" style="display: inline;"><img alt="Image 9" class="asset asset-image 
+at-xid-6a0120a63366ed970b0120a93a0550970b " src="http://damien.krotkine.com/.a/6a0120a63366ed970b0120a93a0550970b-320pi" style="margin: 0pt;" title="Image 9" /></a>&#0160; </p>
+
+<p>Then create a directory (I created mine as <em>syntaxhighlighter</em> at the root), and upload the following files. This list is the bare minimum to have it working, but you can (you should) add more <em>brush</em>es to support more languages highlighting, and also upload the icons (the .png files). You could as well upload all the languages brushes. And you can also use a different theme (I&#39;ll try the Emacs one, as I&#39;m an Emacs addict).</p>
+
+<p>&#0160; <a href="http://damien.krotkine.com/.a/6a0120a63366ed970b0120a93a094e970b-popup" onclick="window.open(this.href,&#39;_blank&#39;,&#39;scrollbars=no,resizable=yes,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0&#39;);
+
+ return false" style="display: inline;"><img alt="Image 7" class="asset 
+asset-image at-xid-6a0120a63366ed970b0120a93a094e970b 
+ " src="http://damien.krotkine.com/.a/6a0120a63366ed970b0120a93a094e970b-320wi" style="margin: 0pt;" title="Image 7" /></a></p>
+
+<p></p>
+
+<p>Make sure your upload works by trying to access one of the file (of course replace your real site host name) :</p>
+
+<p>http://YOURSITE.COM/syntaxhighlighter/shCore.js</p>
+
+<p>If you can see or download the file, it means the files are properly uploaded.</p><h1>Add some magic</h1><p>For SyntaxHighlighter to work, you need to include some Javascript and CSS to the pages that will contain things you want to highlight. The best is to include it on every pages, as the tool is smart enough to find and apply styling only on what you specify to be highlighted.</p>
+
+<p>Now, how do you add CSS and Javascript to your TypePad blog? There are two cases :</p>
+
+<ul>
+<li>Either you are using a <strong>simple TypePad design</strong></li>
+<li>Or you are using an <strong>advanced TypePad design</strong></li>
+</ul>
+<p>
+All blog entries I&#39;ve seen on this topic only handles the case of <strong>advanced</strong> design, because it&#39;s easier to do. But, people using advanced design don&#39;t need a tutorial to include SyntaxHighlighter on their blog, they are, you know, <em>advanced</em> enough to do it on their own... So I thought it would be <em>more useful</em> to describe how to do with a simple design.</p>
+
+<p>With a simple design on TypePad, you don&#39;t have access to the templates of the pages, but luckily, you can add a module that allows you to add any HTML code in your page. So the idea is to this module to your design content, and add the needed javascript and CSS reference to it. Here is how you can do it.</p>
+
+<ul>
+<li>From your TypePad dashboard, go to <strong>Design</strong> -&gt; <strong>Content</strong></li>
+<li>Add a new module, called &quot;<em>Embed your own HTML</em>&quot; (see picture)</li>
+<li>Give it a name (it&#39;s not used in the page, it&#39;s just to see what this module is here for).</li>
+<li>Be sure that you move the module to be on the lowest part of your blog content (to be loaded last)</li>
+</ul>
+<p>&#0160;<a href="http://damien.krotkine.com/.a/6a0120a63366ed970b01310fa186af970c-popup" onclick="window.open( this.href, &#39;_blank&#39;, &#39;width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0&#39; ); return false" style="display: inline;"><img alt="Image 10" class="asset asset-image at-xid-6a0120a63366ed970b01310fa186af970c " src="http://damien.krotkine.com/.a/6a0120a63366ed970b01310fa186af970c-320wi" /></a></p>
+
+<p>The content of the module will be used to load SyntaxHighlighter. Here is what I input in the module :</p>
+
+<p></p>
+
+<p>
+<code class="brush: xml">
+&lt;!-- Include required JS files --&gt;<br />
+&lt;script type=&quot;text/javascript&quot; src=&quot;http://YOURSITE.com<br />/syntaxhighlighter/shCore.js&quot;&gt;&lt;/script&gt;<br />
+<br />
+&lt;!-- At least one brush, here we choose Perl.--&gt;<br />
+&lt;!-- You need to include a brush for every language you want to highlight --&gt;<br />
+&lt;script type=&quot;text/javascript&quot; src=&quot;http://YOURSITE.com<br />/syntaxhighlighter/shBrushPerl.js&quot;&gt;&lt;/script&gt;<br />
+<br />
+&lt;!-- Include *at least* the core style and default theme --&gt;<br />
+&lt;!-- You can choose a different theme --&gt;<br />
+&lt;link href=&quot;http://YOURSITE.com/syntaxhighlighter/shCore.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;<br />
+&lt;link href=&quot;http://YOURSITE.com/syntaxhighlighter/shThemeDefault.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;<br />
+<br />
+&lt;!-- Important options, and finally the main call --&gt;<br />
+&lt;script type=&quot;text/javascript&quot;&gt;<br />
+ SyntaxHighlighter.config.tagName = &quot;code&quot; // use &lt;code&gt; tags<br />
+ SyntaxHighlighter.config.stripBrs = true&#0160; // disregard trailing &lt;br&gt;<br />
+ SyntaxHighlighter.all()<br />
+&lt;/script&gt;<br />
+</code></p>
+<h1>The Options</h1>
+<p>As you can see, there are 2 options set at the end. These options are to make SyntaxHighlighter more compatible with the TypePad graphical editor. By default, SyntaxHighlighter looks for <strong>&lt;pre&gt;</strong> tags. But these are rebuilt each time you modify an entry in the graphical editor. So one of the option is to be able to use <strong>&lt;code&gt;</strong> tags, that are left untouched by TypePad. Well, almost untouched, TypePad tends to add <strong>&lt;br&gt;</strong> tags at the end of line, which is why the seconde option is there.</p>
+
+<h1>Include your code snippet in TypePad</h1>
+
+<p>Now that everything is setup, all there is to do to have a nice code example into TypePad is to create a new Post, write the text using the &quot;<em>Rich Text</em>&quot; view of the editor. Then when you want to include a code snippet, switch to the &quot;<em>HTML</em>&quot; view, and add this :</p>
+
+<p>
+<code class="brush: xml">
+&lt;code class=&quot;brush: perl&quot;&gt;&lt;br&gt;<br />
+# Your code example goes here. For instance, some Perl :&lt;br&gt;<br />
+my %hash = { foo =&gt; &#39;bar&#39; };&lt;br&gt;<br />
+&lt;/code&gt;<br />
+</code>
+</p>
+
+<p>Which will output on your blog page as :</p>
+
+<p><code class="brush: perl">
+# Your code example goes here. For instance, some Perl :<br />
+my %hash = { foo =&gt; &#39;bar&#39; };<br />
+</code></p><p>
+
+And inside the TypePad graphical editor, this is what you will see. Most of the Atom / RSS feeds client (like Google Reader) will also have it like this : </p><p>&#0160;<a href="http://damien.krotkine.com/.a/6a0120a63366ed970b01310fa1a77f970c-popup" onclick="window.open( this.href, &#39;_blank&#39;, &#39;width=640,height=480,scrollbars=no,resizable=no,toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0&#39; ); return false" style="display: inline;"><img alt="Image 11" class="asset asset-image at-xid-6a0120a63366ed970b01310fa1a77f970c " src="http://damien.krotkine.com/.a/6a0120a63366ed970b01310fa1a77f970c-320wi" /></a> <br /> </p><p>Which is in my opinion, not too bad !</p><h1>Conclusion</h1><p>So here it is : a nice, free and open source syntax highlighter in your TypePad posts, easily included, wich themes, colors, a lot of languages supported, and which degrades nicely for feeds readers. There is more customization possible, I suggest you go look at the SyntaxHighlighter documentation.</p><p>I have tried to make this post / tutorial as easy as I possible, but please let me know if you think I should clear ups things, or add more screenshots. If you try to do it on your TypePad account and it works, let me know in the comment. If it doesn&#39;t work, I&#39;ll try to help.</p><p> </p><p></p>
+
+<p></p>
+
+<p></p>
+

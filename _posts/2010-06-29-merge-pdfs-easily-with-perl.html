@@ -1,0 +1,24 @@
+---
+layout: post
+title: Merge PDFs easily with Perl
+published: 1
+categories:
+  - All
+  - Perl
+---
+<p>Today Idiscovered an easy way to merge PDFs files using Perl.</p>
+
+<p></p>
+
+<p>In my current project, I have to automatically generate a technical documentation from my perl modules PODs. It&#39;s easy to create one PDF file for each modules, but then I need to merge them all in one.</p>
+
+<p>The very easy to use CAM::PDF Perl module provides <a href="http://search.cpan.org/%7Ecdolan/CAM-PDF-1.52/bin/appendpdf.pl" title="appelpdf.pl on CPAN">appendpdf.pl</a>. However it can only merge 2 files together.</p>
+
+<p>I&#39;ve copied and modified it for my need, and renamed it <span style="font-family: Courier;">mergepdf.pl</span></p>
+
+<p>Download : <span class="asset asset-generic at-xid-6a0120a63366ed970b01348515fed6970c"><a href="http://damien.krotkine.com/files/mergepdf.pl" title="merge.pl script">mergepdf.pl</a></span></p>
+
+<p>Usage :&#0160; <span style="font-family: Courier;">appendpdf.pl [options] file1.pdf file2.pdf ... fileN.pdf outfile.pdf</span></p>
+
+<p>See the help for more options.</p>
+

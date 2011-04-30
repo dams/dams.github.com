@@ -1,0 +1,11 @@
+---
+layout: post
+title: Real business case using Dancer
+published: 0
+---
+<p>Few weeks agao, at $work, I got a new very simple sub-project to implement : a REST webservice that, when given a word as a request, should return a list of matching words that are associated.</p>
+<p>The data is &quot;static&quot; : I&#39;ve got something like a &quot;hash&quot;, with words as keys, and a list of words to return as values. Well, actually in reality the client is giving us a Excel File (grr), but it&#39;s still a hash semantically, something like :</p>
+<p><span style="font-size: x-large;">First step : install Dancer</span></p>
+<p>cpan[1]&gt; install Dancer</p>
+<p>&#0160;</p>
+

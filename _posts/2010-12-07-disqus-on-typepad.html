@@ -1,0 +1,34 @@
+---
+layout: post
+title: Disqus on Typepad
+published: 1
+category:
+  - All
+---
+<p><a href="http://disqus.com" target="_self">Disqus</a> is great. It's a full featured cross-site comments free management system. I have an account on it, so I wanted to use disqus instead of the typepad comments system.</p>
+<p>"Easy enough" I said to myself : there is a dedicated page to help you install Disqus in Typepad. This includes adding a new "Embed your own HTML" module in your blog content, and copy-pasting a Javacript snippet in it.</p>
+<p>Alas, the Javascript snippet didn't work fine. I suspect that the Typepad code has changed since the Disqus install documentation has been written. &nbsp;Maybe the Javascript code of Typepad tries to block other scripts playing with the comment tags.</p>
+<p>Anyway, here is a solution : I changed the code a bit, and wrapped it in an Javascript&nbsp;<span style="font-family: 'andale mono', times;">onload</span>&nbsp;. I'm not saying it's the best solution, but it works for me... Here is the Javascript code snippet to be used instead of the one Disqus provides in the Typepad Install section. Of course, replace <span style="font-family: 'andale mono', times;">YOUR_DISQUS_LOGIN</span> with, well, your disqus login...</p>
+
+
+<code class="brush: javascript">
+&lt;script type="text/javascript"&gt;
+
+var my_func = function() {
+  var div = document.getElementById('all-comments');
+  var script = document.createElement('script');
+  script.type = 'text/javascript'; script.src = 'http://disqus.com/forums/YOUR_DISQUS_LOGIN/embed.js';
+  document.getElementsByTagName('body')[0].appendChild(script);
+  div.innerHTML = '' ;
+  div.id = 'disqus_thread';
+};
+
+var x = window.onload;
+window.onload = function() {my_func(); if (x) x(); }
+
+&lt;/script&gt;
+</code>
+
+Let me know if it works for your Typepad blog.
+
+

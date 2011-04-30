@@ -1,0 +1,80 @@
+---
+layout: post
+title: flagedit
+published: 1
+---
+<h2>Description</h2>
+
+<p>
+flagedit is a CLI USE flag editor for Gentoo Linux. It let you edit the 
+use flags of /etc/make.conf, as well as the /etc/portage/package.use 
+file.
+</p>
+<p>
+<span style="text-decoration: underline;">features : </span>
+
+
+<ul>
+<li>edit system use flags (in /etc/make.conf)</li>
+<li>edit per package use flags (in /etc/portage/package.use)</li>
+<li>edit system keyword (ACCEPT_KEYWORDS in /etc/make.conf)</li>
+<li>edit per package keywords (in /etc/portage/package.keywords)</li>
+<li>get the list of possible use flags, and keywords, with their 
+descriptions</li>
+<li>flagedit warns you when you try to edit a flag or keyword that 
+doesn't exist</li>
+<li>you can specify alternates files for package.use package.keywords 
+make.conf</li>
+<li>it creates a backup before overwriting</li>
+</ul>
+</p>
+<br>
+<h2>News</h2>
+<p><span style="text-decoration: underline;">2009.01.16</span> Version 0.0.8. make flagedit compatible with directories support ( as per <a href="http://bugs.gentoo.org/241668">bug 241668</a> )</p>
+<p><span style="text-decoration: underline;">2005.12.26</span> Version 0.0.7. The help fits in 80 columns
+</p>
+
+<p><span style="text-decoration: underline;">2005.11.24</span> Version 0.0.6. some improvments
+</p>
+
+<p><span style="text-decoration: underline;">2005.11.15</span> Version 0.0.5. some improvments
+</p>
+
+<p><span style="text-decoration: underline;">2005.10.14</span> Version 0.0.2. An ebuild is available for 
+gentoo linux.</p>
+<p><span style="text-decoration: underline;">2005.09.29</span> New version : now warns if the flag is not a valid
+ one. More features also</p>
+<p><span style="text-decoration: underline;">2005.07.24</span> just did this web page.</p>
+
+<br>
+<h2>Download</h2>
+<p>
+</p>
+
+<ul>
+<li><a href="http://damien.krotkine.com/flagedit/download">here</a></li>
+</ul>
+
+<br>
+<h2>Documentation</h2>
+<p>This is just the raw output of flagedit --help, but I think it's 
+self-explanatory :
+</p><pre>flagedit allows you to edit the use flags or the keywords for a particular<br>ebuild, or for the whole system. a backup is done for each modified file, named<br>file.old.<br><br>Usage: flagedit [PACKAGE] [ACTIONS | -- KEYWORD_ACTIONS] [ OPTIONS ]<br><br>Examples:<br> flagedit net-im/amsn --show # shows the use flag set for net-im/amsn<br> flagedit net-im/amsn +gnome # adds the gnome use flag to net-im/amsn<br> flagedit net-im/amsn -kde +xmms # adds the xmms use flag and set the -kde one<br> flagedit net-im/amsn %kde # reset the kde use flag (it's removed from the line)<br><br> flagedit %kde # reset the global use flag (it's removed in make.conf)<br> flagedit +gnome -qt # add gnome and -qt in make.conf<br><br> flagedit net-im/amsn -- %x86 # reset the x86 keyword for net-im/amsn<br> flagedit net-im/amsn -- +~ppc +~x86 # adds the ~ppc and ~x86 keywords for net-im/amsn<br> flagedit net-im/amsn -- % # resets the keywords for this package<br> flagedit -- +~x86 # sets ACCEPT_KEYWORDS to "~x86" in /etc/make.conf<br><br>You can mix the flags and keywords :<br> flagedit net-im/amsn +gnome -- +~x86<br><br>PACKAGE is a package name (like dev-ruby/ruby-atk). If no package is given,<br>flagedit will edit the maine USE flags (in make.conf), or the main<br>ACCEPT_KEYWORDS (in make.conf)<br><br>ACTIONS are :<br>+FLAG enable the FLAG. Example : +sse<br>-FLAG disable the FLAG. Example : -sse<br>%FLAG reset the FLAG to default. Example : %sse<br>% reset the whole flags of PACKAGE to default. In this case, PACKAGE is not optional<br><br>KEYWORD_ACTIONS are :<br>+KEYWORD enable the keyword. Example : +x86<br>-KEYWORD disable the KEYWORD. Example : -~x86<br>%KEYWORD reset the KEYWORD to default. Example : %x86<br>% reset the whole keywords of PACKAGE to default. In this case, PACKAGE is not optional<br><br><br>OPTIONS are :<br> --package-file &lt;path&gt; specify an alternate package.use file (default is /etc/portage/package.use)<br> --keywords-file &lt;path&gt; specify an alternate package.keywords file (default is /etc/portage/package.keywords)<br> --make-conf-file &lt;path&gt; specify an alternate make.conf file (default is /etc/make.conf)<br> --portage-dir &lt;path&gt; specify an alternate portage directory path (default is /usr/portage)<br> --alpha-order sort the flags or keywords alphabetically instead of keeping the original order<br> --show don't edit, display the flags or keywords of the PACKAGE. If no package is given, display the system USE flags or the system ACCEPT_KEYWORDS.<br> --list don't edit, display the entire list of possible flags or possible keywords.<br> --desc if specified with --list, display the flags or keywords description also.<br> --keywords specifies that actions are to be done on keywords, not on use flags<br> -- same as --keywords<br> --strict if a specified flag or keyword name is invalid, dies, instead of just warning.<br> --nowarn if a specified flag or keyword name is invalid, don't warn.<br> --help this help<br> --version prints the version<br> <br>see http://dkrotkine.com/flagedit/<br></pre>
+
+<br>
+<h2>About</h2>
+<p>
+</p>
+
+<ul>
+<li>author : <a href="http://damien.krotkine.com">dams</a></li>
+<li>license : GPL-2 (not upper version)</li>
+</ul>
+
+<h2>Thanks to</h2>
+<p></p>
+
+<ul>
+<li>tigger for requesting it, and testing.</li>
+</ul>
+
