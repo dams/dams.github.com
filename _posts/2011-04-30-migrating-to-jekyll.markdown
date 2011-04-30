@@ -3,8 +3,9 @@ layout: post
 title: Migrating to Jekyll
 ---
 
-h1. {{ page.title }}
+# {{ page.title }}
 
-p(meta). 30 Apr 2011 - Paris
+<p class="meta"> 30 Apr 2011 - Paris</p>
 
-This is some kind of post
+So, this post is about migrating from [Typepad](http://typepad.com) to
+[Jekyll](http://jekyllrb.com/).
