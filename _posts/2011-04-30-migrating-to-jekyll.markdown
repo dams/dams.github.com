@@ -16,7 +16,7 @@ The reasons why I'm moving away from Typepad are :
 * Typepad editor is not techie compatible
 * Typepad is a blog engine...
 
-An blog engines are not hype anymore :) Seriously, I was looking for something
+And blog engines are not hype anymore :) Seriously, I was looking for something
 easy and simple, and compatible with my geek side.
 
 Back in the days, I remember that I enjoyed a lot using
