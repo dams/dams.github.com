@@ -8,7 +8,7 @@ title: Migrating to Jekyll
 <p class="meta"> 30 Apr 2011 - Paris</p>
 
 So, this post is about migrating this blog from [Typepad](http://typepad.com)
-to [Jekyll](http://jekyllrb.com/).
+to [Jekyll](http://jekyllrb.com/), using a small Perl script.
 
 The reasons why I'm moving away from Typepad are :
 * Typepad is slow
@@ -31,13 +31,13 @@ Jekyll is :
 * easy
 * simple
 
-But the real power is that it's coupled with github's pages. So I feel right at
+But the real power is that it can be coupled with github's pages. So I feel right at
 home, and so editing code and pushing to git(hub) (stuff I do everyday) won't
 be different from editing blog posts and pushing to github.
 
 Oh, but how did I migrate my blog posts from Typepad to Jekyll ? I couldn't
 find any migration script on internet or importers in jekyll, so I wrote a
-quick and not so dirty script. it's all on github here : the mighty
+quick and not so dirty Perl script. it's all on github here : the mighty
 [typepad_to_jekyll](https://github.com/dams/typepad_to_jekyll) ! Feel free to
 fork it. Feedback welcome :)
 
