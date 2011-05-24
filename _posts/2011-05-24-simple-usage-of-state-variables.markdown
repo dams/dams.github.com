@@ -36,9 +36,9 @@ package Foo;
 If you are using a non-ancient version of Perl (that is, 5.10 or more), you should consider using the `state` keyword. It's similar to the static variables inherited from C.
 
 From the [documentation](http://perldoc.perl.org/functions/state.html) :
-> `state` declares a lexically scoped variable, just like `my` does. However, those
+> _`state` declares a lexically scoped variable, just like `my` does. However, those
 > variables will never be reinitialized, contrary to lexical variables that are
-> reinitialized each time their enclosing block is entered.
+> reinitialized each time their enclosing block is entered._
 
 So the two code snippets become :
 
