@@ -1,4 +1,5 @@
 ---
+layout: post
 title: Simple usage of Perl state variables
 ---
 
