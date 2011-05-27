@@ -5,9 +5,6 @@ title: Perlbrew, Emacs, Flymake
 
 # {{ page.title }}
 
-Perl + Emacs / Flymake
-======================
-
 So I'm a seasoned user of [Emacs](http://www.gnu.org/software/emacs/) (I
 started using it back to 1999). I'm using it for all things, especially Perl
 coding, using the `cperl-mode` Emacs mode.
@@ -32,7 +29,7 @@ Alas, flymake is not working by default with Perlbrew, as it uses
 installed via Perlbrew, and tell Flymake to use one of them.
 
 kentaro has made a Perlbrew mode, and [explained how to use it with
-flymake](http://d.hatena.ne.jp/antipop/20110413/1302671667)
+flymake](http://d.hatena.ne.jp/antipop/20110413/1302671667).
 
 However, for various reasons, this Perlbrew mode it doesn't work well on my
 machine and Franck ( [lumperjaph](http://lumberjaph.net/) ) reported similar
