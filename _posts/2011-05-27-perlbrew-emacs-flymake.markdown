@@ -74,4 +74,5 @@ Then, edit your `.emacs` so that it contains these lines:
     
     (add-hook 'cperl-mode-hook (lambda () (flymake-mode t)))
 
-And _voilà_, Flymake will work with your Perlbrew Perl, as it used to work with the system Perl.
+And _voilà_, Flymake will work with your Perlbrew Perl, as it used to work with
+the system Perl.
