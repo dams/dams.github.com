@@ -70,7 +70,9 @@ Then, edit your `.emacs` so that it contains these lines:
              (local-file (file-relative-name
                           temp-file
                           (file-name-directory buffer-file-name))))
-        (list (perlbrew-mini-get-current-perl-path) (list "-MProject::Libs" "-wc" local-file))))
+        (list (perlbrew-mini-get-current-perl-path)
+              (list "-MProject::Libs" "-wc" local-file)))
+    )
     
     (add-hook 'cperl-mode-hook (lambda () (flymake-mode t)))
 
