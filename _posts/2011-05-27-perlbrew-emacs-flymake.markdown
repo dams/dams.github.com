@@ -56,26 +56,22 @@ Emacs will see it.
 
 Then, edit your `.emacs` so that it contains these lines:
 
-{% highlight lisp %}
-
-  (require 'perlbrew-mini)
-  ;; change to your username below
-  (perlbrew-mini-set-perls-dir "/home/uername/perl5/perlbrew/perls/")
-  ;; change the version you wish to use
-  (perlbrew-mini-use "perl-5.12.2")
-  
-  (require 'flymake)
-  
-  (defun flymake-perl-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list (perlbrew-mini-get-current-perl-path) (list "-MProject::Libs" "-wc" local-file))))
-  
-  (add-hook 'cperl-mode-hook (lambda () (flymake-mode t)))
-
-{% endhighlight %}
+    (require 'perlbrew-mini)
+    ;; change to your username below
+    (perlbrew-mini-set-perls-dir "/home/uername/perl5/perlbrew/perls/")
+    ;; change the version you wish to use
+    (perlbrew-mini-use "perl-5.12.2")
+    
+    (require 'flymake)
+    
+    (defun flymake-perl-init ()
+      (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                         'flymake-create-temp-inplace))
+             (local-file (file-relative-name
+                          temp-file
+                          (file-name-directory buffer-file-name))))
+        (list (perlbrew-mini-get-current-perl-path) (list "-MProject::Libs" "-wc" local-file))))
+    
+    (add-hook 'cperl-mode-hook (lambda () (flymake-mode t)))
 
 And _voilà_, Flymake will work with your Perlbrew Perl, as it used to work with the system Perl.
