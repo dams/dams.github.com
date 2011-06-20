@@ -17,5 +17,6 @@ seconds" on the Intarweb, it shows up...
 
 {% highlight perl %}
 my $duration = $dt2->subtract_datetime_absolute($dt1);
+my $seconds = $duration->seconds();
 {% endhighlight %}
 
