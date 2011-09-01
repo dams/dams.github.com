@@ -38,13 +38,16 @@ As `daxim` pointed out on *#dancer*, there are numerous ways for `root` to get a
 
 ***
 
+
 ## Launch a new screen
 
 {% highlight bash %}
 $ screen
 {% endhighlight %}
 
+
 ## Encrypt a new password
+
 
 screen provides a way to encrypt a password right from a screen session. In the following snippets, I assume the default screen key is A, as default.
 
@@ -55,14 +58,18 @@ screen provides a way to encrypt a password right from a screen session. In the 
 
 Now, the encrypted password is in the screen clipboard. We need to retrieve it
 
+
 ## Paste the crypted password
+
 
 {% highlight bash %}
 # hit ctrl A ]
 # the encrypted password should be pasted in the console
 {% endhighlight %}
 
+
 ## Edit the screen configuration file
+
 
 Copy the encrypted password and paste it in `~/.screenrc` (or whatever your screen configuration file is)
 
