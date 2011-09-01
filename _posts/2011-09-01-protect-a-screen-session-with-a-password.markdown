@@ -20,8 +20,23 @@ The idea is that when a screen is running, it can be detached and reattached.
 However, a super user has the possibility to attach any screen launched by a
 user of the system. Now, what if inside the screen, you use sensitive
 informations, or connect to other remote servers ? The super user will have
-access to these as well. To protect yourself from that, it's possible to have
+access to these as well. To protect yourself from that (actually to mitigate the issue), it's possible to have
 screen ask for a password when trying to reattach it.
+
+***
+
+*DISCLAIMER*
+
+In no way this method will prevent `root` to access your sensitive information.
+This method will just make it more difficult for a super user to see your screen content using `su $user` and `screen -r -d`.
+
+As `daxim` pointed out on *#dancer*, there are numerous ways for `root` to get at your sensitive information :
+
+*   attach to the process with a debugger, then skip the password check when it comes up
+*   read the process memory of screen and dig out interesting stuff
+*   install a network monitor and grabs your password as it is transmitted next time.  rsa encryption (via ssh) does not help because root also has the keys
+
+***
 
 ## Launch a new screen
 
