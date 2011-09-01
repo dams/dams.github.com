@@ -5,17 +5,21 @@ title: protect a screen session with a password
 
 # {{ page.title }}
 
-I use [Gnu Screen](http://www.gnu.org/software/screen/) a lot. It's a must have
-tool when working on remote servers.
+At work, I'm currently deploying my Perl modules on a new platform ( multiple
+servers ), which doesn't have an automated deployment mechanism yet. I use [Gnu
+Screen](http://www.gnu.org/software/screen/) a lot. It's a must have tool when
+working on remote servers.
 
-Long time ago, I spent time to craft a good screenrc configuration file for my
-needs. But I only discovered yesterday that I could protect my screen session
-from being recovered from a super user on the remote server. The documentation is lacking precise description on how to set it up, so here is it a quick tutorial.
+Long time ago, I spent time to craft a good `.screenrc` configuration file for
+my needs. But I only discovered yesterday that I could protect my screen
+session from being recovered from a super user on the remote server. The
+documentation is lacking precise description on how to set it up, so here is
+a quick tutorial.
 
 The idea is that when a screen is running, it can be detached and reattached.
 However, a super user has the possibility to attach any screen launched by a
 user of the system. Now, what if inside the screen, you use sensitive
-information, or connect to other remote servers ? The super user will have
+informations, or connect to other remote servers ? The super user will have
 access to these as well. To protect yourself from that, it's possible to have
 screen ask for a password when trying to reattach it.
 
