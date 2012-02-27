@@ -7,7 +7,7 @@ title: "Dancer::Plugin::Params::Normalization"
 
 Just released a new version of [Dancer::Plugin::Params::Normalization](https://metacpan.org/module/Dancer::Plugin::Params::Normalization). This plugin allows to normalize or alter parameters recieved by a Dancer route.
 
-An example of what developers usually want is to accept mixedcased request parameters, and have them all lowercased. Thatis done easily :
+An example of what developers usually want is to accept mixedcased request parameters, and have them all lowercased. That is done easily :
 
     # In your configuration file
     plugins:
