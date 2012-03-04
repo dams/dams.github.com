@@ -11,7 +11,7 @@ Monday, presented by the [French](http://mongueurs.typepad.com/) [Perl](http://m
 It's called **Perl, fun again!**
 
 It will be held at [La cantine](http://lacantine.org/events/perl-fun-again)
-Monday 3 March 2012, in the evening.
+Monday 5 March 2012, in the evening.
 
 ![La Cantine](http://www.sukria.net/fr/wp-content/uploads/2012/02/6234213565_830637e185_m.jpg)
 
