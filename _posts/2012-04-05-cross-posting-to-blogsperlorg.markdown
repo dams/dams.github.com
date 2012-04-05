@@ -30,7 +30,7 @@ look on [Metacpan](http://metacpan.org) indicates us there is a
 great, let's use that.
 
 There is a catch: to use this module, you need your login, and your *API
-password*, not your regular passowrd. You can get it easily though, by [following these instructions](https://github.com/davorg/blogs.perl.org/issues/137) (thanks to davorg for directing me to it).
+password*, not your regular password. You can get it easily though, by [following these instructions](https://github.com/davorg/blogs.perl.org/issues/137) (thanks to davorg for directing me to it).
 
 To avoid storing the user / password in the script, and to have to pass it on
 the command line, let's have a configuration file, that will lie at
