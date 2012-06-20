@@ -13,19 +13,24 @@ provided us with cool Dancer sourcecode analyzis graphs.
 
 ## Overall contribution by users
 
-<img src="/images/dancer_analysis_by_Antelink-contribution_parts_by_users.png" width="376.5" height="162">
+<a href="/images/dancer_analysis_by_Antelink-contribution_parts_by_users.png">
+<img src="/images/dancer_analysis_by_Antelink-contribution_parts_by_users.png" width="376.5" height="162"></a>
 
 ## .pm files contribution by users
 
-<img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_pm-by_users.png" width="366" height="150">
+<a href="/images/dancer_analysis_by_Antelink-contribution_parts-only_pm-by_users.png">
+<img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_pm-by_users.png" width="366" height="150"></a>
 
 ## Pod files contribution by users
 
-<img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_pod-by_users.png" width="366" height="150">
+<a href="/images/dancer_analysis_by_Antelink-contribution_parts-only_pod-by_users.png">
+<img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_pod-by_users.png" width="366" height="150"></a>
 
 ## Test files contribution by users
 
+<a href="/images/dancer_analysis_by_Antelink-contribution_parts-only_t-by_users.png">
 <img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_t-by_users.png" width="366" height="150">
+</a>
 
 What does that demonstrate ? It shows that Dancer is *really* powered by its
 community. Decisions are made together, the code is hacked by multiple hands,
