@@ -32,6 +32,16 @@ provided us with cool Dancer sourcecode analyzis graphs.
 <img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_t-by_users.png" width="366" height="150">
 </a>
 
+## Reading these graphs
+
+*EDIT* : The surfaces represent a mean between the number of commits, and the weight of
+modifications contributed (in term of "code line"), only when these are
+original content addition. Moving content around isn't counted as active
+contribution.
+
+Note that some people are registered twice with different names, I'll try to
+post an updated version
+
 What does that demonstrate ? It shows that Dancer is *really* powered by its
 community. Decisions are made together, the code is hacked by multiple hands,
 and the management is done in a collegial manner on github.
