@@ -17,15 +17,15 @@ provided us with cool Dancer sourcecode analyzis graphs.
 
 ## .pm files contribution by users
 
-<img src="images/dancer_analysis_by_Antelink-contribution_parts-only_pm-by_users.png" width="366" height="150">
+<img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_pm-by_users.png" width="366" height="150">
 
 ## Pod files contribution by users
 
-<img src="images/dancer_analysis_by_Antelink-contribution_parts-only_pod-by_users.png" width="366" height="150">
+<img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_pod-by_users.png" width="366" height="150">
 
 ## Test files contribution by users
 
-<img src="images/dancer_analysis_by_Antelink-contribution_parts-only_t-by_users.png" width="366" height="150">
+<img src="/images/dancer_analysis_by_Antelink-contribution_parts-only_t-by_users.png" width="366" height="150">
 
 What does that demonstrate ? It shows that Dancer is *really* powered by its
 community. Decisions are made together, the code is hacked by multiple hands,
