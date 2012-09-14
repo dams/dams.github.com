@@ -28,7 +28,7 @@ La prochaine réunion technique de Paris.pm se tiendra mardi **25 septembre 2012
 **Adresse** :
       181 avenue Daumesnil, 75012 Paris
 
-**Lien goggle map** :
+**Goggle map** :
       [google map](http://goo.gl/OGUbI)
 
 Si vous êtes intéressé, n'hésitez pas à venir, entrée libre et gratuite. Pour plus d'info, demandez dans les commentaires.
