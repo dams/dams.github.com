@@ -131,20 +131,24 @@ ${PERLBREW_DIR}/bin/cpanm:
 	${PERLBREW} install-cpanm
 
 got_curl:
-	@which curl >/dev/null || ( echo "you don't have curl, please install it and retry" && false )
+	@which curl >/dev/null \
+        || ( echo "you don't have curl, please install it and retry" && false )
 
 got_bash:
-	@which bash >/dev/null || ( echo "you don't have bash, please install it and retry" && false )
+	@which bash >/dev/null \
+        || ( echo "you don't have bash, please install it and retry" && false )
 
 got_perlbrew_perl: ${PERLBREW_DIR}/bin/perlbrew ${PERLBREW_DIR}/bin/cpanm perlbrew_dancer1_plugin_tests perlbrew_dancer2_plugin_tests
 
 # Build perl from scratch and call this instance dancer1
 perlbrew_dancer1_plugin_tests:
-	${PERLBREW} list | grep dancer1_plugin_tests > /dev/null || ( ${PERLBREW} install -j 2 -n perl-5.16.1 --as dancer1_plugin_tests )
+	${PERLBREW} list | grep dancer1_plugin_tests > /dev/null \
+        || ( ${PERLBREW} install -j 2 -n perl-5.16.1 --as dancer1_plugin_tests )
 
 # Build perl from scratch and call this instance dancer2
 perlbrew_dancer2_plugin_tests:
-	${PERLBREW} list | grep dancer2_plugin_tests > /dev/null || ( ${PERLBREW} install -j 2 -n perl-5.16.1 --as dancer2_plugin_tests && ${CPANM_DANCER2} ${HERE}/../.. )
+	${PERLBREW} list | grep dancer2_plugin_tests > /dev/null \
+        || ( ${PERLBREW} install -j 2 -n perl-5.16.1 --as dancer2_plugin_tests && ${CPANM_DANCER2} ${HERE}/../.. )
 
 # This gets the list of plugins, as previously described
 plugins_list:
