@@ -148,7 +148,8 @@ perlbrew_dancer1_plugin_tests:
 # Build perl from scratch and call this instance dancer2
 perlbrew_dancer2_plugin_tests:
 	${PERLBREW} list | grep dancer2_plugin_tests > /dev/null \
-        || ( ${PERLBREW} install -j 2 -n perl-5.16.1 --as dancer2_plugin_tests && ${CPANM_DANCER2} ${HERE}/../.. )
+        || ( ${PERLBREW} install -j 2 -n perl-5.16.1 --as dancer2_plugin_tests \
+             && ${CPANM_DANCER2} ${HERE}/../.. )
 
 # This gets the list of plugins, as previously described
 plugins_list:
