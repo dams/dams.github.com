@@ -72,5 +72,3 @@ So, please give a try to
 [Action::Retry](https://metacpan.org/module/Action::Retry), and let me know
 what you think. It may be buggy, but I... tried my best :)
 
-
-=cut
