@@ -5,6 +5,8 @@ title: "New Perl module: Action::Retry"
 
 # {{ page.title }}
 
+*UPDATE: I have included a functional API, as per Oleg Komarov request, and amended this post accordingly*.
+
 I've just released a new module called
 [Action::Retry](https://metacpan.org/module/Action::Retry).
 
@@ -13,7 +15,16 @@ retries.
 
 A simple way to use it is :
 
-    Action::Retry->new( attempt_code => sub { ... } )->run();
+{% highlight perl %}
+use Action::Retry qw(retry);
+retry { ... };
+{% endhighlight %}
+
+And the Object Oriented API:
+
+{% highlight perl %}
+Action::Retry->new( attempt_code => sub { ... } )->run();
+{% endhighlight %}
 
 The purpose of this module is similar to `Retry`, `Sub::Retry`, `Attempt` and
 `AnyEvent::Retry`. However, it's highly configurable, more flexible and has
@@ -39,6 +50,20 @@ my $action = Action::Retry->new(
   on_failure_code => sub { say "Given up retrying" },
 );
 $action->run();
+{% endhighlight %}
+
+And the functional API:
+
+{% highlight perl %}
+  use Action::Retry qw(retry);
+  retry { ... }
+  retry_if_code => sub { $_[0] =~ /Connection lost/ || $_[1] > 20 },
+  strategy => { Fibonacci => { multiplicator => 2000,
+                               initial_term_index => 3,
+                               max_retries_number => 5,
+                             }
+              },
+  on_failure_code => sub { say "Given up retrying" };
 {% endhighlight %}
 
 Strategies can decide if it's worthwhile continuing trying, or if it should fail.
