@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "new module: Action::Retry"
+title: "New Perl module: Action::Retry"
 ---
 
 # {{ page.title }}
 
-I've just release a new module called
+I've just released a new module called
 [Action::Retry](https://metacpan.org/module/Action::Retry).
 
 Use it when you want to run some code until it succeeds, waiting between two
@@ -19,8 +19,8 @@ The purpose of this module is similar to `Retry`, `Sub::Retry`, `Attempt` and
 `AnyEvent::Retry`. However, it's highly configurable, more flexible and has
 more features.
 
-You can specify what's the code to try, but also what's the code to check that
-the code were successful . There is also a callback to execute code on
+You can specify the code to try, but also a callback that will be executed to
+check the success or failure of the attempt. There is also a callback to execute code on
 failure.
 
 The module also supports different sleep strategies ( Constant, Linear,
@@ -70,5 +70,5 @@ ones if needed, so there is no excuse not to use it.
 
 So, please give a try to
 [Action::Retry](https://metacpan.org/module/Action::Retry), and let me know
-what you think. It may be buggy, but I... tried my best :)
+what you think.
 
