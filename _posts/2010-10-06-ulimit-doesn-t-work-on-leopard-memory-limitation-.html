@@ -1,9 +1,6 @@
 ---
 layout: post
 title: Ulimit doesn't work on Leopard (memory limitation)
-published: 1
-category:
-  - Perl
 ---
 <p><br />After many tests on my side, I got confirmation from <a href="http://forums.macrumors.com/showthread.php?t=573616" target="_self">this page</a>&#0160;: it looks like ulimit doesn&#39;t work for memory limitation starting from Mac OS 10.5. That&#39;s a shame...</p>
 <p><span style="font-family: &#39;andale mono&#39;, times;">perl -E &#39;use BSD::Resource; &#0160;setrlimit(RLIMIT_VMEM, 2000, 2000); my $s; for my $i (1..50_000) { $s .= &quot;A&quot; x 1024 } say &quot;damned, I should have been killed&quot;&#39;</span></p>
