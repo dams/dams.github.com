@@ -79,18 +79,40 @@ foreach my $site (grep { $_ ne 'main_blog'} keys %$cfg) {
     if ($properties{type} eq 'twitter') {
         use Net::Twitter;
         use Scalar::Util 'blessed';
+        use Try::Tiny;
 
-        my $nt = Net::Twitter->new(
-                                   traits   => [qw/OAuth API::REST/],
-                                   consumer_key        => $properties{consumer_key},
-                                   consumer_secret     => $properties{consumer_secret},
-                                   access_token        => $properties{access_token},
-                                   access_token_secret => $properties{access_token_secret},
-                                  );
+        my $nt;
 
-        my $result = $nt->update('New blog entry: "' . $title . '" at ' . $main_blog_url);
-        
+        while(1) {
+            say Dumper(\%properties); use Data::Dumper;
+            try {
+                $nt = Net::Twitter->new(
+                                        traits   => [qw/OAuth API::REST/],
+                                        consumer_key        => $properties{consumer_key},
+                                        consumer_secret     => $properties{consumer_secret},
+                                        access_token        => $properties{access_token},
+                                        access_token_secret => $properties{access_secret},
+                                       );
+                my $result = $nt->update('New blog entry: "' . $title . '" at ' . $main_blog_url);
+                1;
+            } catch {
+                say " Error : $_";
+                my $auth_url = $nt->get_authorization_url;
+                say "Go to $auth_url to authorize this application";
+                say "Enter the PIN:";
+                my $pin = <STDIN>;
+                chomp $pin;
+                say "pin was : $pin";
+                my @access_tokens = $nt->request_access_token(verifier => $pin);
+                say "Please update your cross.ini file with these tokens";
+                say "    access_token = $access_tokens[0]";
+                say "    access_secret = $access_tokens[1]";
+                $properties{access_token} = $access_tokens[0];
+                $properties{access_token_secret} = $access_tokens[1];
+                0;
+            }
+              and last;
+        }
     }
-    
 }
  
