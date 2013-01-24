@@ -27,17 +27,19 @@ The module also supports different sleep strategies ( Constant, Linear,
 Fibonacci...) and it's easy to build yours. Strategies can have their options
 as well.
 
-    my $action = Action::Retry->new(
-      attempt_code => sub { ... },
-      retry_if_code => sub { $_[0] =~ /Connection lost/ || $_[1] > 20 },
-      strategy => { Fibonacci => { multiplicator => 2000,
-                                   initial_term_index => 3,
-                                   max_retries_number => 5,
-                                 }
-                  },
-      on_failure_code => sub { say "Given up retrying" },
-    );
-    $action->run();
+{% highlight perl linenos %}
+my $action = Action::Retry->new(
+  attempt_code => sub { ... },
+  retry_if_code => sub { $_[0] =~ /Connection lost/ || $_[1] > 20 },
+  strategy => { Fibonacci => { multiplicator => 2000,
+                               initial_term_index => 3,
+                               max_retries_number => 5,
+                             }
+              },
+  on_failure_code => sub { say "Given up retrying" },
+);
+$action->run();
+{% endhighlight %}
 
 Strategies can decide if it's worthwhile continuing trying, or if it should fail.
 
