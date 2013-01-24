@@ -27,7 +27,7 @@ The module also supports different sleep strategies ( Constant, Linear,
 Fibonacci...) and it's easy to build yours. Strategies can have their options
 as well.
 
-{% highlight perl linenos %}
+{% highlight perl %}
 my $action = Action::Retry->new(
   attempt_code => sub { ... },
   retry_if_code => sub { $_[0] =~ /Connection lost/ || $_[1] > 20 },
@@ -48,19 +48,22 @@ pseudo "non-blocking" mode, in which it doesn't actually sleep, but instead
 returns immediately, and won't perform the action code until required time has
 elapsed. Basicaly it allows to do this:
 
-    my $action = Action::Retry->new(
-      attempt_code => sub { ... },
-      non_blocking => 1,
-      strategy => { 'Constant' }
-    );
-    while (1) {
-      # if the action failed, it doesn't sleep
-      # next time it's called, it won't do anything until it's time to retry
-      $action->run();
+{% highlight perl %}
+my $action = Action::Retry->new(
+  attempt_code => sub { ... },
+  non_blocking => 1,
+  strategy => { 'Constant' }
+);
+while (1) {
+  # if the action failed, it doesn't sleep
+  # next time it's called, it won't do anything until it's time to retry
+  $action->run();
 
-      do_something_else();
-      # do something else while time goes on
-    }
+  do_something_else();
+  # do something else while time goes on
+
+}
+{% endhighlight %}
 
 of course `do_something_else` should be very fast, so that the loop goes back
 quickly to retrying the `attempt_code`.
