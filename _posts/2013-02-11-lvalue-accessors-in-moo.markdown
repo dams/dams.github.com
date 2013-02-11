@@ -46,19 +46,21 @@ knowledges, and that was very satisfactory.
 [MooX::LvalueAttribute](https://metacpan.org/module/MooX::LvalueAttribute) is a
 module that provides Lvalue attributes:
 
-  package App;
-  use Moo;
-  use MooX::LvalueAttribute;
-  
-  has name => (
-    is => 'rw',
-    lvalue => 1,
-  );
+{% highlight perl %}
+package App;
+use Moo;
+use MooX::LvalueAttribute;
 
-  # Elsewhere
+has name => (
+  is => 'rw',
+  lvalue => 1,
+);
 
-  my $app = App->new(name => 'foo');
-  $app->name = 'Bar';
-  print $app->name;  # Bar
+# Elsewhere
+
+my $app = App->new(name => 'foo');
+$app->name = 'Bar';
+print $app->name;  # Bar
+{% endhighlight %}
 
 Enjoy!
