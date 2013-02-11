@@ -57,10 +57,12 @@ has name => (
 );
 
 # Elsewhere
-
 my $app = App->new(name => 'foo');
+
 $app->name = 'Bar';
+
 print $app->name;  # Bar
+
 {% endhighlight %}
 
 Enjoy!
