@@ -29,7 +29,7 @@ faster, more flexible and powerful.
 All I needed was to move my hacks in a proper Role, and wrap the whole in a
 module, and push it on CPAN. Tadaa, [MooX::LvalueAttribute](https://metacpan.org/module/MooX::LvalueAttribute) was born.
 
-In the process I used [play-perl](http:://play-perl.org) to register my quests,
+In the process I used [play-perl](http://play-perl.org) to register my quests,
 and exchanged [thoughts with Joel
 Berger](http://play-perl.org/quest/511800ae94f611130b000025). I think I'm going
 to use this website more, see if it can boost my productivity, and help me
