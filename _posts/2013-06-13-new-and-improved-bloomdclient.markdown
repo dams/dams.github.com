@@ -8,6 +8,8 @@ title: "New And Improved: Bloomd::Client"
 ![New and Improved!](/images/val_approuve.png "I borrowed the image from @yenzie -
  hope you don't mind, Yannick !")
 
+_thanks to @yenzie for the picture :P_
+
 ## Bloom filters
 
 [Bloom filters](http://en.wikipedia.org/wiki/Bloom_filter) are statistical data
@@ -28,12 +30,12 @@ filter, and the number of elements it contains, you know what will be the
 probability of having false positives.
 
 The **huge** benefit is that a bloom filter is very small, compared to a hash
-table. And you can get a better accuracy if you allow it to take more space.
+table.
 
 ## bloomd
 
-At work, I have replaced a heavy Redis instance that was used primarily as a
-huge hash table, by a couple of bloom filters. For that I used
+At work, I replaced a heavy Redis instance ( using 60g of RAM) that was used primarily as a
+huge hash table, by a couple of bloom filters ( using 2g ). For that I used
 [bloomd](https://github.com/armon/bloomd), from _Armon Dadgar_. It's light,
 fast, has enough features, and the code looks sane.
 
@@ -41,7 +43,7 @@ All I needed was a Perl client to connect to it.
 
 ## Bloomd::Client
 
-[Bloomd::Client](https://metacpan.org/module/Bloomd::Client) is a light
+So I wrote [Bloomd::Client](https://metacpan.org/module/Bloomd::Client). It is a light
 client that connects to bloomd using a regular INET socket, and speaks the
 simple ASCII protocol (very similar to Redis' one) that bloomd implements.
 
@@ -66,5 +68,8 @@ socket. It'll die if bloomd didn't answer fast enough or if something broke.
 That allows you to incorporate the bloomd connection in a retry strategy to try
 again later, or fallback to another server...
 
-To implement such a strategy, I recommend using [Action::Retry](https://metacpan.org/module/Action::Retry).
+To implement such a strategy, I recommend using
+[Action::Retry](https://metacpan.org/module/Action::Retry). There is a blog
+post about it [here](http://damien.krotkine.com/2013/01/21/new-module-actionretry.html) :)
 
+dams.
