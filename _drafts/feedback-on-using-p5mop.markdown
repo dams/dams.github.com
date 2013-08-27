@@ -5,20 +5,24 @@ title: Feedback on using p5-mop
 
 # {{ page.title }}
 
-I guess that you've heard about p5-mop by now. Steven Little is actively
-developping it, and moreover he's blogging about it. Few months ago I tried to
-use it. More precisely, as soon as p5-mop-redux was announced, I tried to give
-it a go. And you should too ! Here is why.
+I guess that you've heard about p5-mop by now.
 
-But first, what is p5-mop ? In a nutshell, p5-mop is an attempt to implement a
-subtract of Moose into the core of Perl. So p5-mop provides a Meta Object
-Protocol to Perl. So does Moose, however p5-mop is implemented in a way that it
-can be properly included in the Perl core. So, as far as I understood, after
-trying to hack directly in the core, Stevan Little restarted the p5-mop
-implementation ( the so called p5-mop-redux github project), using
-Devel::Declare, ( then Parser::Stuff), so that he can experiment and release
-often, while keeping the implementation core-friendly. Once he's happy with the
-features and all, he'll make sure it finds its way to the core.
+In a nutshell, p5-mop is an attempt to implement a subtract of
+[Moose](http://moose.iinteractive.com/) into the core of Perl. Moose provides a
+Meta Object Protocol to Perl. So does p5-mop, however p5-mop is implemented in
+a way that it can be properly included in the Perl core.
+
+As far as I understood, after trying to hack directly in the core, Stevan
+Little restarted the p5-mop implementation ( the so called p5-mop-redux github
+project), using [Devel::Declare](https://metacpan.org/module/Devel::Declare), (
+then [Parse::Keyword](https://metacpan.org/module/Parse::Keyword) ), so that he
+can experiment and release often, while keeping the implementation
+core-friendly. Once he's happy with the features and all, he'll make sure it
+finds its way to the core.
+
+A small team (Steven Little, Jesse Luers) is actively developping p5-mop, and moreover he's blogging about it.
+Few months ago I tried to use it. More precisely, as soon as p5-mop-redux was
+announced, I tried to give it a go. And you should too ! Here is why.
 
 
 ## install it ##
