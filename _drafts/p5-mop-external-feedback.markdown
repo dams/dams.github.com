@@ -88,7 +88,7 @@ Note: a class Foo defined in the package Bar will be declared as Bar::Foo.
 As you can see in the example, an attribute is declared using `has`. After the
 attribute name, you can add 'is', which is followed by a list of 'traits':
 
-    has foo is ro, lazy, type('Int') = 42;
+    has foo is ro, lazy = 42;
 
 * ro/rw means it's read-only / read-write
 * lazy means the attribute constructor won't be 
@@ -100,7 +100,7 @@ methods definitions are done using the `method` keyword, followed by the method 
 
 ## types ##
 
-I haven't really played with types, but
+Types are not yet core to the p5-mop, and the team is questioning this idea. The concensus is currently that 
 
 ## default value / constructor ##
 
@@ -162,12 +162,64 @@ a good idea (how many time have you written make_immutable ?).
 
 # my humble constructive remarks #
 
-##
- undef versus not set: In Moose there is a difference between an attribute
-  being unset, and an attribute being undef. In p5-mop, there is no such distinction. The reason for this is partially technical, and maybe partially a dising decision.
+## Undef versus not set
+In Moose there is a difference between an attribute being unset, and an
+attribute being undef. In p5-mop, there is no such distinction. The reason for
+this is partially technical, and maybe partially a dising decision.
 
 
-* modifiers
+## Method Modifiers
+
+Method modifiers are not yet implemented, but they won't be difficult to
+implement. Actually, here is an example of how to implement method modifiers
+using p5-mop very own meta. It implements `around`:
+
+```perl
+sub modifier {
+    if ($_[0]->isa('mop::method')) {
+        my $method = shift;
+        my $type   = shift;
+        my $meta   = $method->associated_meta;
+        if ($meta->isa('mop::role')) {
+            if ( $type eq 'around' ) {
+                $meta->bind('after:COMPOSE' => sub {
+                    my ($self, $other) = @_;
+                    if ($other->has_method( $method->name )) {
+                        my $old_method = $other->remove_method( $method->name );
+                        $other->add_method(
+                            $other->method_class->new(
+                                name => $method->name,
+                                body => sub {
+                                    local ${^NEXT} = $old_method->body;
+                                    my $self = shift;
+                                    $method->execute( $self, [ @_ ] );
+                                }
+                            )
+                        );
+                    }
+                });
+            } elsif ( $type eq 'before' ) {
+                die "before not yet supported";
+            } elsif ( $type eq 'after' ) {
+                die "after not yet supported";
+            } else {
+                die "I have no idea what to do with $type";
+            }
+        } elsif ($meta->isa('mop::class')) {
+            die "modifiers on classes not yet supported";
+        }
+    }
+}```
+
+It is supposed to be used like this:
+
+```perl
+method my_method is modifier('around') ($arg) {
+    $arg % 2 and return $self->${^NEXT}(@_);
+    die "foo";
+}
+```
+
   around foo
   method foo is modifier(around)
   method foo is around
@@ -177,8 +229,33 @@ a good idea (how many time have you written make_immutable ?).
 * 'is' ? why use has + is ? isn't one verb enough ? in Moo*, the 'is' was just
   one property. we had default, lazy, etc. Now, 'is' is just a seperator
   between the name and the 'traits'
-* exporter
-  p5-mop doesn't use @ISA for inheritance, so `use base 'Exporter'` won't work. You havs to do `use Exporter 'import'`
 
+## Exporter
+
+p5-mop doesn't use @ISA for inheritance, so `use base 'Exporter'` won't work.
+You have to do `use Exporter 'import'`. That is somewhat disturbing because
+most Perl developers (I think) implements classes by inheriting from Exporter
+(that's also what the documentation of Exporter recommends).
+
+You could argue that one should code clean classes (that don't export anything,
+and clean modules (that export stuff but don't do OO). Mixing OO in a class
+with methods and exportable subs looks a bit un-orthodox. But that's what we do
+all day long and it is almost part of the Perl culture now. Think about all the
+modules that provides 2 API, a functional one and an OO one. All in the same
+namespace. So, _somehow_, being able to easily export subs is needed.
+
+However, as per Jesse Luehrs and Stevan Little, they don't think a MOP
+implementation should be in charge of implementing an Exporter module, and I
+can only agree with this. So it looks like the solution will be a method trait,
+like `exportable`:
+
+```perl
+sub foo is exportable { ... }
+```
+
+But that is not yet impemented.
+
+
+## Inside Out objects versus blessed structure objects
 
 
