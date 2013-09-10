@@ -21,8 +21,8 @@ project](https://github.com/stevan/p5-mop-redux), using
 [Parse::Keyword](https://metacpan.org/module/Parse::Keyword) ), so that he can
 experiment and release often, while keeping the implementation core-friendly.
 Once he's happy with the features and all, he'll make sure it finds its way to
-the core. A small team (Steven Little, Jesse Luers) is actively developping
-p5-mop, and Stevan is regularly [blogging about
+the core. A small team (Steven Little, Jesse Luers, and other contributors) is
+actively developping p5-mop, and Stevan is regularly [blogging about
 it](http://blogs.perl.org/users/stevan_little/).
 
 Few months ago, when p5-mop-redux was announced, I tried to give it a go. And
@@ -97,29 +97,34 @@ attribute name, you can add 'is', which is followed by a list of 'traits':
 
 methods definitions are done using the `method` keyword, followed by the method name, plus optional _method traits_
 
-
 ## types ##
 
 I haven't really played with types, but
 
 ## default value / constructor ##
 
+```perl
 has foo = 'default value';
+```
 
 which is actually
 
+```perl
 has foo = sub { 'default value' };
+```
 
 So, there is no default value, only constructors. Meaning that
 
+```perl
 has foo = {};
+```
 
 will work properly ( creating a new hashref each time )
 
-There has been some comments about using '=' instead of // or || or 'default',
-but this syntax is used in a lot of other programing language, and considered
-somehow the default (hehe) syntax. I think it's worth sticking with '=' for an
-easier learning curve for newcomers.
+There has been some comments about using `=` instead of `//` or `||` or
+`default`, but this syntax is used in a lot of other programing language, and
+considered somehow the default (hehe) syntax. I think it's worth sticking with
+`=` for an easier learning curve for newcomers.
 
 ## getter / setter ##
 
@@ -135,15 +140,17 @@ method append {
 
 ## clearer / predicate ##
 
-Because the constructor is already implemented using '=', what about clearer
+Because the constructor is already implemented using `=`, what about clearer
 and predicate?
 
-clearer:
+
+```perl
+# clearer
 method clear_foo { undef $foo }
 
-predicate:
+# predicate
 method has_foo { defined $foo }
-
+```
 
 ## meta ##
 
@@ -159,9 +166,6 @@ a good idea (how many time have you written make_immutable ?).
   being unset, and an attribute being undef. In p5-mop, there is no such distinction. The reason for this is partially technical, and maybe partially a dising decision.
 
 
-I likes 
-
-* sometimes $self doesn't work
 * modifiers
   around foo
   method foo is modifier(around)
