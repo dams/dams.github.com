@@ -9,7 +9,7 @@ title: p5-mop: external feedback
 
 I guess that you've heard about p5-mop by now.
 
-If not, in a nutshell, p5-mop is an attempt to implement a subtract of
+If not, in a nutshell, p5-mop is an attempt to implement a subset of
 [Moose](http://moose.iinteractive.com/) into the core of Perl. Moose provides a
 Meta Object Protocol to Perl. So does p5-mop, however p5-mop is implemented in
 a way that it can be properly included in the Perl core.
@@ -21,7 +21,7 @@ project](https://github.com/stevan/p5-mop-redux), using
 [Parse::Keyword](https://metacpan.org/module/Parse::Keyword) ), so that he can
 experiment and release often, while keeping the implementation core-friendly.
 Once he's happy with the features and all, he'll make sure it finds its way to
-the core. A small team (Steven Little, Jesse Luers, and other contributors) is
+the core. A small team (Steven Little, Jesse Luehrs, and other contributors) is
 actively developping p5-mop, and Stevan is regularly [blogging about
 it](http://blogs.perl.org/users/stevan_little/).
 
