@@ -78,7 +78,8 @@ class Point3D extends Point {
         $data->{z} = $z;
         $data;
     }
-}```
+}
+```
 
 Note: a class Foo defined in the package Bar will be declared as Bar::Foo.
 
