@@ -38,7 +38,7 @@ summarize it:
 
 > We started the first prototype, not remembering the old adage of "write the
 > first one to throw away" and I got sentimentally attached to my choice of
-> design approach. This new approach [p5-moop-redux] was purposfully built with
+> design approach. This new approach (p5-mop-redux) was purposfully built with
 > a firm commitment to keeping it as simple as possible, therefore making it
 > simpler to hack on.
 > Also, instead of making the MOP I always wanted, I approached as building the
@@ -399,7 +399,7 @@ Just an idea, but maybe we could have `$!public_attribute` and
 
 ## why `is` ? we already have `has` !
 
-OK this one thing is bothering me a lot: why do we have to use the word `is`
+This one thing is bothering me a lot: why do we have to use the word `is`
 when declaring an attribute? The attribute declaration starts with `has`. So
 with `is`, that makes it *two* _verbs_ for *one* line of code. For me it's too
 much. in Moo*, the `is` was just one property. we had `default`, `lazy`, etc.
@@ -491,7 +491,7 @@ you don't agree with my remarks above.
 
 ## Contributors
 
-This article has been written by [Damien Krotkine](Damien Krotkine), but these people helped
+This article has been written by [Damien Krotkine](damien.krotkine.com), but these people helped
 proof-reading it:
 * Stevan Little
 * Jesse Luehrs
