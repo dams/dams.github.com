@@ -45,8 +45,6 @@ summarize it:
 > mop people actually needed (one that worked well with existing perl classes,
 > etc)
 
-
-
 Few months ago, when p5-mop-redux was announced, I tried to give it a go. And
 you should too ! Because it's easy.
 
