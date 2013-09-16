@@ -223,11 +223,11 @@ Because the attribute builder is already implemented using `=`, what about
 clearer and predicate?
 
 ```perl
-# clearer
-method clear_foo { undef $!foo }
-
-# predicate
-method has_foo { defined $!foo }
+    # clearer
+    method clear_foo { undef $!foo }
+    
+    # predicate
+    method has_foo { defined $!foo }
 ```
 
 That was pretty easy, right? Predicates and clearers have been introduced in
@@ -245,7 +245,7 @@ existence of the attributes, but their define-ness!" You're right, but read on!
 
 ## Undef versus not set
 
-*This section is not complete*
+_THIS SECTION IS NOT FINISHED TODO_
 
 In Moose there is a difference between an attribute being unset, and an
 attribute being undef. In p5-mop, there is no such distinction. The reason for
@@ -256,8 +256,16 @@ be either:
 
 * non-existent in the underlying hash
 * present in the hash but with an undef value
-* present and defined ( be it true or false
-* a true value
+* present and defined but false
+* present, defined and true
+
+That's probably too many cases... Getting rid of one of them looks sane to me.
+
+Plus, in standard Perl programming, if an optional argument is not passed to a
+function, it's not "non-existent", it's _undef_. So it makes sense to have a
+similar behavior in mop. After all, we got this "not set" state only because
+objects are stored in HashRef, so it looks like it's an implementation detail
+that made its way into becoming a concept on its own.
 
 Because the attributes get a twigil variable created, it's currently impossible
 to make the distinction between an attribute being unset or undef. That could
@@ -267,14 +275,6 @@ if an attribute has been set, or a different technique.
 But Stevan said that it wasn't bothering him too much. For developers new to
 OO, it seems weird to tell them that their attributes can have
 
-
-
-That's probably too many cases... Getting rid of one of them looks sane to me.
-Plus, in standard Perl programming, if an optional argument is not passed to a
-function, it's not "non-existent", it's _undef_. So it makes sense to have a
-similar behavior in mop. After all, we got this "not set" state only because
-objects are stored in HashRef, so it looks like it's an implementation detail
-that made its way into becoming a concept on its own.
 
 ## Roles
 
@@ -432,7 +432,7 @@ where InsideOut objects were trendy, especially using `Class::Std`. But that
 didn't last long, when Moose and its follow ups came back to using regular
 blessed structured objects. So why use inside out objects?
 
-_TODO_
+_THIS SECTION IS NOT FINISHED TODO_
 
 At first it 
 
