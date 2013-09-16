@@ -490,6 +490,7 @@ you don't agree with my remarks above.
 * [Moops]()
 
 ## Contributors
+
 This article has been written by [Damien Krotkine](Damien Krotkine), but these people helped
 proof-reading it:
 * Stevan Little
