@@ -79,7 +79,7 @@ Here is the classical point example from the [p5-mop test suite](https://github.
 use mop;
 
 class Point {
-    has $!x is ro = 0;
+has $!x is ro = 0;
     has $!y is ro = 0;
 
     method set_x ($x) {
@@ -155,6 +155,7 @@ use `$self`. A good proportion of the code in a class is about attributes.
 Being able to use them directly is great.
 
 Other notes worth mentiong:
+
 * Classes can have a `BUILD` method, as with Moose.
 * A class can inherit from an other one by `extend`-ing it.
 * In a inheriting class, calling the parent method is not done using `SUPER`,
@@ -493,6 +494,7 @@ you don't agree with my remarks above.
 
 This article has been written by [Damien Krotkine](damien.krotkine.com), but these people helped
 proof-reading it:
+
 * Stevan Little
 * Jesse Luehrs
 * Toby Inkster
