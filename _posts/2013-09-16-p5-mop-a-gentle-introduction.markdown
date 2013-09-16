@@ -76,44 +76,44 @@ p5-mop is very easy to install:
 Here is the classical point example from the [p5-mop test suite](https://github.com/stevan/p5-mop-redux/blob/master/t/001-examples/001-point.t)
  
 ```perl
-    use mop;
-    
-    class Point {
-        has $!x is ro = 0;
-        has $!y is ro = 0;
-    
-        method set_x ($x) {
-            $!x = $x;
-        }
-    
-        method set_y ($y) {
-            $!y = $y;
-        }
-    
-        method clear {
-            ($!x, $!y) = (0, 0);
-        }
-    
-        method pack {
-            +{ x => $self->x, y => $self->y }
-        }
+use mop;
+
+class Point {
+    has $!x is ro = 0;
+    has $!y is ro = 0;
+
+    method set_x ($x) {
+        $!x = $x;
     }
-    
-    # ... subclass it ...
-    
-    class Point3D extends Point {
-        has $!z is ro = 0;
-    
-        method set_z ($z) {
-            $!z = $z;
-        }
-    
-        method pack {
-            my $data = $self->next::method;
-            $data->{z} = $!z;
-            $data;
-        }
+
+    method set_y ($y) {
+        $!y = $y;
     }
+
+    method clear {
+        ($!x, $!y) = (0, 0);
+    }
+
+    method pack {
+        +{ x => $self->x, y => $self->y }
+    }
+}
+
+# ... subclass it ...
+
+class Point3D extends Point {
+    has $!z is ro = 0;
+
+    method set_z ($z) {
+        $!z = $z;
+    }
+
+    method pack {
+        my $data = $self->next::method;
+        $data->{z} = $!z;
+        $data;
+    }
+}
 ```
 
 This examples shows how straightforward it is to declare a class and a
@@ -139,12 +139,12 @@ and implemented by Florian Ragwitz in its
 useful to differenciate standard variables from attributes variables:
 
 ```perl
-    class Foo {
-        has $!stuff;
-    	method do_stuff ($stuff) {
-            $!stuff = $stuff;
-        }
+class Foo {
+    has $!stuff;
+	method do_stuff ($stuff) {
+        $!stuff = $stuff;
     }
+}
 ```
 
 As you can see, it's important to be able to differenciate `stuff` (the
@@ -167,7 +167,7 @@ When declaring an attribute name, you can add `is`, which is followed by a list 
 _traits_:
 
 ```perl
-    has $!bar is ro, lazy = $_->foo + 2;
+has $!bar is ro, lazy = $_->foo + 2;
 ```
 
 * `ro` / `rw` means it's read-only / read-write
@@ -178,13 +178,13 @@ attribute is being used
 ## Default value / builder ##
 
 ```perl
-    has $!foo = 'default value';
+has $!foo = 'default value';
 ```
 
 which is actually
 
 ```perl
-    has $!foo = sub { 'default value' };
+has $!foo = sub { 'default value' };
 ```
 
 So, there is no default value, only builders. That means that `has $!foo = {};`
@@ -193,7 +193,7 @@ will work as expected ( creating a new hashref each time ).
 You can reference the current instance in the attribute builder by using `$_`:
 
 ```perl
-    has $!foo = $_->_init_foo;
+has $!foo = $_->_init_foo;
 ```
 
 There has been some comments about using `=` instead of `//` or `||` or
@@ -207,9 +207,9 @@ When calling a method, the parameters are as usual available in `@_`. However
 you can also declare these parameters in the method signature:
 
 ```perl
-    method foo ($arg1, $arg2=10) {
-        say $arg1;
-    }
+method foo ($arg1, $arg2=10) {
+    say $arg1;
+}
 ```
 
 Using `=` you can specify a default value. In the method body, these parameters
@@ -234,11 +234,11 @@ Because the attribute builder is already implemented using `=`, what about
 clearer and predicate?
 
 ```perl
-    # clearer
-    method clear_foo { undef $!foo }
-    
-    # predicate
-    method has_foo { defined $!foo }
+# clearer
+method clear_foo { undef $!foo }
+
+# predicate
+method has_foo { defined $!foo }
 ```
 
 That was pretty easy, right? Predicates and clearers have been introduced in
@@ -279,10 +279,10 @@ Plus, in standard Perl programming, if an optional argument is not passed to a
 function, it's not "non-existent", it's _undef_:
 
 ```perl
-    foo();
-    sub foo {
-	    my ($arg) = @_; # $arg is undef
-    }
+foo();
+sub foo {
+    my ($arg) = @_; # $arg is undef
+}
 ```
 
 So it makes sense to have a similar behavior in p5-mop - that is, an attribute
@@ -293,18 +293,18 @@ that is not set is undef.
 Roles definition syntax is quite similar to defining a class.
 
 ```perl
-    role Bar {
-        has $!additional_attr = 42;
-        method more_feature { say $!additional_attr }
-    }
+role Bar {
+    has $!additional_attr = 42;
+    method more_feature { say $!additional_attr }
+}
 ```
 
 They are consumed right in the class declaration line:
 
 ```perl
-    class Foo with Bar, Baz {
-        # ...
-    }
+class Foo with Bar, Baz {
+    # ...
+}
 ```
 
 ## Meta ##
@@ -323,50 +323,50 @@ implement. Actually, here is an example of how to implement method modifiers
 using p5-mop very own meta. It implements `around`:
 
 ```perl
-    sub modifier {
-        if ($_[0]->isa('mop::method')) {
-            my $method = shift;
-            my $type   = shift;
-            my $meta   = $method->associated_meta;
-            if ($meta->isa('mop::role')) {
-                if ( $type eq 'around' ) {
-                    $meta->bind('after:COMPOSE' => sub {
-                        my ($self, $other) = @_;
-                        if ($other->has_method( $method->name )) {
-                            my $old_method = $other->remove_method( $method->name );
-                            $other->add_method(
-                                $other->method_class->new(
-                                    name => $method->name,
-                                    body => sub {
-                                        local ${^NEXT} = $old_method->body;
-                                        my $self = shift;
-                                        $method->execute( $self, [ @_ ] );
-                                    }
-                                )
-                            );
-                        }
-                    });
-                } elsif ( $type eq 'before' ) {
-                    die "before not yet supported";
-                } elsif ( $type eq 'after' ) {
-                    die "after not yet supported";
-                } else {
-                    die "I have no idea what to do with $type";
-                }
-            } elsif ($meta->isa('mop::class')) {
-                die "modifiers on classes not yet supported";
+sub modifier {
+    if ($_[0]->isa('mop::method')) {
+        my $method = shift;
+        my $type   = shift;
+        my $meta   = $method->associated_meta;
+        if ($meta->isa('mop::role')) {
+            if ( $type eq 'around' ) {
+                $meta->bind('after:COMPOSE' => sub {
+                    my ($self, $other) = @_;
+                    if ($other->has_method( $method->name )) {
+                        my $old_method = $other->remove_method( $method->name );
+                        $other->add_method(
+                            $other->method_class->new(
+                                name => $method->name,
+                                body => sub {
+                                    local ${^NEXT} = $old_method->body;
+                                    my $self = shift;
+                                    $method->execute( $self, [ @_ ] );
+                                }
+                            )
+                        );
+                    }
+                });
+            } elsif ( $type eq 'before' ) {
+                die "before not yet supported";
+            } elsif ( $type eq 'after' ) {
+                die "after not yet supported";
+            } else {
+                die "I have no idea what to do with $type";
             }
+        } elsif ($meta->isa('mop::class')) {
+            die "modifiers on classes not yet supported";
         }
     }
+}
 ```
 
 It is supposed to be used like this:
 
 ```perl
-    method my_method is modifier('around') ($arg) {
-        $arg % 2 and return $self->${^NEXT}(@_);
-        die "foo";
-    }
+method my_method is modifier('around') ($arg) {
+    $arg % 2 and return $self->${^NEXT}(@_);
+    die "foo";
+}
 ```
 
 I would like to see method modifiers in p5-mop. As per Stevan Little and Jesse
@@ -412,10 +412,10 @@ Also, among the new keywords added by p5-mop, we have only _nouns_ (`class`,
 The counter argument on this is that this syntax is inspired by Perl6:
 
 ```perl
-    class Point is rw {
-        has ($.x, $.y);
-        method gist { "Point a x=$.x y=$.y" }
-    }
+class Point is rw {
+    has ($.x, $.y);
+    method gist { "Point a x=$.x y=$.y" }
+}
 ```
 
 So, "blame Larry" ? :)
