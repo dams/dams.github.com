@@ -399,12 +399,12 @@ Just an idea, but maybe we could have `$!public_attribute` and
 
 ## why `is` ? we already have `has` !
 
-This one thing is bothering me a lot: why do we have to use the word `is`
-when declaring an attribute? The attribute declaration starts with `has`. So
-with `is`, that makes it *two* _verbs_ for *one* line of code. For me it's too
-much. in Moo*, the `is` was just one property. we had `default`, `lazy`, etc.
-Now, `is` is just a seperator between the name and the 'traits'. In my opinion,
-it's redundant.
+This one thing is bothering me a lot: why do we have to use the word `is` when
+declaring an attribute? The attribute declaration starts with `has`. So with
+`is`, that makes it *two* _verbs_ for *one* line of code. For me it's too much.
+in Moo\* modules, the `is` was just one property. We had `default`, `lazy`,
+etc. Now, `is` is just a seperator between the name and the 'traits'. In my
+opinion, it's redundant.
 
 Also, among the new keywords added by p5-mop, we have only _nouns_ (`class`,
 `role`, `method`). Only one _verb_, `has`.
