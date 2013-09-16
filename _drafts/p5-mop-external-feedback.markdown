@@ -53,12 +53,10 @@ provide feedback.
 
 p5-mop is very easy to install:
 
-1. if you're using github, just fork the `p5-mop-redux` project. Otherwise you can get a zip [here](https://github.com/stevan/p5-mop-redux/archive/master.zip).
-2. if you don't have cpanm, get it with `curl -L http://cpanmin.us | perl - App::cpanminus`
+0. if you don't have cpanm, get it with `curl -L http://cpanmin.us | perl - App::cpanminus`
+1. first, we need to install twigils, with `cpanm --dev twigils`
+2. if you're using github, just fork the `p5-mop-redux` project. Otherwise you can get a zip [here](https://github.com/stevan/p5-mop-redux/archive/master.zip).
 3. using cpanm, execute `cpanm .` from within the p5-mop-redux directory.
-4. you'll need to do the same with twigils: either fork the `twigils` project,
-   or get a zip [here](https://github.com/rafl/twigils/archive/master.zip).
-5. then cpanm, execute `cpanm .` from within the twigils directory.
 
 ## A first example ##
 
