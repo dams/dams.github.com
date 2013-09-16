@@ -28,8 +28,8 @@ Little restarted the p5-mop implementation: the so called p5-mop-redux
 [Parse::Keyword](https://metacpan.org/module/Parse::Keyword) ), so that he can
 experiment and release often, while keeping the implementation core-friendly.
 Once he's happy with the features and all, he'll make sure it finds its way to
-the core. A small team (Steven Little, Jesse Luehrs, and other contributors) is
-actively developping p5-mop, and Stevan is regularly
+the core. A small team (Steven Little, [Jesse Luehrs](http://tozt.net/), and
+other contributors) is actively developping p5-mop, and Stevan is regularly
 [blogging about it](http://blogs.perl.org/users/stevan_little/).
 
 Few months ago, when p5-mop-redux was announced, I tried to give it a go. And
@@ -38,12 +38,12 @@ you should too ! Because it's easy.
 ## Why is it important to try it out ? ##
 
 It's important to have at least a vague idea of where p5-mop stands at, because
-this project is shaping a big part of Perl's future. There will be a _before_
-and an _after_ having a mop in core. And it is being designed and tested right
-now. So as Perl users, it's our chance to have a look at it, test it, and give
-our feedback.
+this project is shaping a big part of Perl's future. IMHO, there will be a
+_before_ and an _after_ having a mop in core. And it is being designed and
+tested _right_ _now_. So as Perl users, it's our chance to have a look at it,
+test it, and give our feedback.
 
-Do we like the syntax ? Do we find it easy enough? What did we prefer more/less
+Do we like the syntax ? Is it powerful enough? What did we prefer more/less
 in Moose ? etc. In few months, things will be decided and it'll only be a
 matter of time and implementation details. Now is the most exciting time to
 participate in the project. You don't need to hack on it, just try it out, and
@@ -122,8 +122,8 @@ Functions defined with the regular `sub` keyword won't have all these features,
 and that's for good: it makes the difference between _function_ and _method_
 more explicit.
 
-`has`declares an attribute, which can have so-called _traits_. Attribute names
-are *twigils*. Borrowed from Perl6, and implemented by Florian Ragwitz in its
+`has`declares an attribute. Attribute names are *twigils*. Borrowed from Perl6,
+and implemented by Florian Ragwitz in its
 [twigils project on github](https://github.com/rafl/twigils/), twigils are
 useful to differenciate standard variables from attributes variables:
 
@@ -136,12 +136,16 @@ useful to differenciate standard variables from attributes variables:
     }
 ```
 
+As you can see, it's important to be able to differenciate `stuff` (the
+variable) and `stuff` (the attribute).
+
 The added benefit of attributes variables is that one doesn't need to contantly
-use `$self`
+use `$self`. A good proportion of the code in a class is about attributes.
+Being able to use them directly is great.
 
 Other notes worth mentiong:
-* A class can inherit from an other one by `extend`ing it.
 * Classes can have a `BUILD` method, as with Moose.
+* A class can inherit from an other one by `extend`-ing it.
 * In a inheriting class, calling the parent method is not done using `SUPER`,
   but `$self->next::method`.
 * A class `Foo` declared in the package `Bar` will be defined as `Bar::Foo`.
@@ -151,19 +155,16 @@ Other notes worth mentiong:
 When declaring an attribute name, you can add `is`, which is followed by a list of
 _traits_:
 
+```perl
     has $!foo is ro, required = 42;
     has $!bar is ro, lazy = $_->foo + 2;
+```
 
 * `ro` / `rw` means it's read-only / read-write
 * `required` means it's a mandatory attribute
 * `lazy` means the attribute constructor we'll be called only when the
 attribute is being used
 * `weak_ref` enables an attribute to be a weak reference
-
-## Methods traits ##
-
-Methods definitions are done using the `method` keyword, as we saw, followed by
-the method name, plus optional _method traits_.
 
 ## Default value / builder ##
 
@@ -177,18 +178,33 @@ which is actually
     has $!foo = sub { 'default value' };
 ```
 
-So, there is no default value, only builders. Meaning that
+So, there is no default value, only builders. That means that `has $!foo = {};`
+will work as expected ( creating a new hashref each time ).
+
+You can reference the current instance in the attribute builder by using `$_`:
 
 ```perl
-    has $!foo = {};
+    has $!foo = $_->_init_foo;
 ```
-
-will work as expected ( creating a new hashref each time )
 
 There has been some comments about using `=` instead of `//` or `||` or
 `default`, but this syntax is used in a lot of other programing language, and
 considered somehow the default (ha-ha) syntax. I think it's worth sticking with
 `=` for an easier learning curve for newcomers.
+
+## Methods parameters ##
+
+When calling a method, the parameters are as usual available in `@_`. However
+you can also declare these parameters in the method signature:
+
+```perl
+    method foo ($arg1, $arg2=10) {
+        say $arg1;
+    }
+```
+
+Using `=` you can specify a default value. In the method body, these parameters
+will be available directly.
 
 ## Types ##
 
