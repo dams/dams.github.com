@@ -246,6 +246,9 @@ But I hear you say "Wait, these are no clearer nor predicate ! They are not test
 existence of the attributes, but their define-ness!" You're right, but read on!
 
 ## Undef versus not set
+
+*This section is not complete*
+
 In Moose there is a difference between an attribute being unset, and an
 attribute being undef. In p5-mop, there is no such distinction. The reason for
 this is partially technical, and maybe partially a design decision.
