@@ -118,30 +118,26 @@ additional variables will be automatically available:
   attributes from within the class without having to use their
   `$self->accessors`.
 
-Fucntions defined with the regular `sub` keyword won't have all these features,
-and
+Functions defined with the regular `sub` keyword won't have all these features,
+and that's for good: it makes the difference between _function_ and _method_
+more explicit.
 
-`has`declares an attribute,
-which can have so-called _traits_. Attribute names are *twigils*. Borrowed from
-Perl6, and implemented by Florian Ragwitz in its
+`has`declares an attribute, which can have so-called _traits_. Attribute names
+are *twigils*. Borrowed from Perl6, and implemented by Florian Ragwitz in its
 [twigils project on github](https://github.com/rafl/twigils/), twigils are
 useful to differenciate standard variables from attributes variables:
 
-class Foo {
-    has $!stuff;
-	method do_stuff ($stuff) {
-        $!stuff = $stuff,
+```perl
+    class Foo {
+        has $!stuff;
+    	method do_stuff ($stuff) {
+            $!stuff = $stuff;
+        }
     }
-}
+```
 
-
-
-However, you'll probably notice few interesting syntactic styles. First of all,
-there is no need to add trailing semi-colon at the end of class and method
-blocks.
-
-Second, what are these `$!stuff` ? These special variable names are
-called twigils. We'll come back to that.
+The added benefit of attributes variables is that one doesn't need to contantly
+use `$self`
 
 Other notes worth mentiong:
 * A class can inherit from an other one by `extend`ing it.
@@ -152,71 +148,65 @@ Other notes worth mentiong:
 
 ## Attributes traits ##
 
-As you can see in the example, an attribute is declared using `has`. However
-the attribute declaration is not a simple name, it's a twigil variable name.
+When declaring an attribute name, you can add `is`, which is followed by a list of
+_traits_:
 
-After the attribute name, you can add 'is', which is followed by a list of
-'traits':
-
-    has $!foo is ro, lazy = 42;
+    has $!foo is ro, required = 42;
+    has $!bar is ro, lazy = $_->foo + 2;
 
 * `ro` / `rw` means it's read-only / read-write
+* `required` means it's a mandatory attribute
 * `lazy` means the attribute constructor we'll be called only when the
 attribute is being used
-* `weak_ref` enables an attribute to be a weak reference, 
+* `weak_ref` enables an attribute to be a weak reference
 
-## methods ##
+## Methods traits ##
 
-methods definitions are done using the `method` keyword, followed by the method
-name, plus optional _method traits_
+Methods definitions are done using the `method` keyword, as we saw, followed by
+the method name, plus optional _method traits_.
 
-## types ##
-
-Types are not yet core to the p5-mop, and the team is questioning this idea.
-The concensus is currently that types should not be part of the mop, to
-
-
-## default value / constructor ##
+## Default value / builder ##
 
 ```perl
-has foo = 'default value';
+    has $!foo = 'default value';
 ```
 
 which is actually
 
 ```perl
-has foo = sub { 'default value' };
+    has $!foo = sub { 'default value' };
 ```
 
-So, there is no default value, only constructors. Meaning that
+So, there is no default value, only builders. Meaning that
 
 ```perl
-has foo = {};
+    has $!foo = {};
 ```
 
-will work properly ( creating a new hashref each time )
+will work as expected ( creating a new hashref each time )
 
 There has been some comments about using `=` instead of `//` or `||` or
 `default`, but this syntax is used in a lot of other programing language, and
-considered somehow the default (hehe) syntax. I think it's worth sticking with
+considered somehow the default (ha-ha) syntax. I think it's worth sticking with
 `=` for an easier learning curve for newcomers.
 
-## getter / setter ##
+## Types ##
 
-they are
+Types are not yet core to the p5-mop, and the team is questioning this idea.
+The concensus is currently that types should not be part of the mop, to keep it
+simple and flexible. You ought to be able to choose what type system you want
+to use. I'm particularly happy about this decision. Perl is so versatile and
+flexible that it can be used (and bent to be used) in numerous environment and
+configuration. Sometimes you need robustness and high level powerful features,
+and it's great to use a powerful typing system like Moose's one. Sometimes
+(most of the time? ) Type::Tiny (before that I used Params::Validate) is good
+enough and gives you faster processing. Sometimes you don't want any type
+checking.
 
-## methods ##
+## Clearer / predicate ##
 
-use the word 'method'
-
-method append {
-  $self
-}
-
-## clearer / predicate ##
-
-Because the constructor is already implemented using `=`, what about clearer
-and predicate?
+Because the attribute builder is already implemented using `=`, what about
+clearer and predicate?
 
 ```perl
 # clearer
@@ -227,36 +217,17 @@ method has_foo { defined $!foo }
 ```
 
 That was pretty easy, right? Predicates and clearers have been introduced in
-Moose because writing them ourselves would requirer to access the underlying
-HashRef behind an instance (for instance, `sub predicate { exists
-$self->{$attr_name} }`) and that's very bad. To work around that, Moose has to
-generate that kind of code and provie a way to enable it or not. But because of
-the twigils in p5-mop, there is no issue in writing predicates and cleare
-ourselves.
+Moose because writing them ourselves would require to access the underlying
+HashRef behind an instance (e.g. `sub predicate { exists $self->{$attr_name}}`)
+and that's very bad. To work around that, Moose has to generate that kind of
+code and provide a way to enable it or not. Hence the `predicate`and `clearer`
+options. So you see that they exists mostly because of the implementation.
+
+In p5-mop, thanks to the twigils, there is no issue in writing predicates and
+cleare ourselves.
 
 But I hear you say "Wait, these are no clearer nor predicate ! They are not testing the
-existence of the attributes, but their defineness!" You're right, but read on!
-
-## Roles
-
-Roles definition syntax is quite similar to defining a class.
-
-```perl
-    role Bar {
-        has $!additional_attr = 42;
-        method more_feature { say $!additional_attr }
-    }
-```
-
-They are consumed right in the class declaration line:
-
-```perl
-    class Foo with Bar, Baz {
-        # ...
-    }
-```
-
-# My humble constructive remarks #
+existence of the attributes, but their define-ness!" You're right, but read on!
 
 ## Undef versus not set
 In Moose there is a difference between an attribute being unset, and an
@@ -288,13 +259,33 @@ similar behavior in mop. After all, we got this "not set" state only because
 objects are stored in HashRef, so it looks like it's an implementation detail
 that made its way into becoming a concept on its own.
 
-## meta ##
+## Roles
+
+Roles definition syntax is quite similar to defining a class.
+
+```perl
+    role Bar {
+        has $!additional_attr = 42;
+        method more_feature { say $!additional_attr }
+    }
+```
+
+They are consumed right in the class declaration line:
+
+```perl
+    class Foo with Bar, Baz {
+        # ...
+    }
+```
+
+## Meta ##
 
 Going meta is not difficult either but I won't describe it here, as I just want
 to showcase default OO programming syntax. On that note, it looks like Stevan
 will make classes immutable by default, unless specified. I think that this is
 a good idea (how many time have you written make_immutable ?).
 
+# My (hopefully constructive) remarks #
 
 ## Method Modifiers
 
@@ -303,60 +294,88 @@ implement. Actually, here is an example of how to implement method modifiers
 using p5-mop very own meta. It implements `around`:
 
 ```perl
-sub modifier {
-    if ($_[0]->isa('mop::method')) {
-        my $method = shift;
-        my $type   = shift;
-        my $meta   = $method->associated_meta;
-        if ($meta->isa('mop::role')) {
-            if ( $type eq 'around' ) {
-                $meta->bind('after:COMPOSE' => sub {
-                    my ($self, $other) = @_;
-                    if ($other->has_method( $method->name )) {
-                        my $old_method = $other->remove_method( $method->name );
-                        $other->add_method(
-                            $other->method_class->new(
-                                name => $method->name,
-                                body => sub {
-                                    local ${^NEXT} = $old_method->body;
-                                    my $self = shift;
-                                    $method->execute( $self, [ @_ ] );
-                                }
-                            )
-                        );
-                    }
-                });
-            } elsif ( $type eq 'before' ) {
-                die "before not yet supported";
-            } elsif ( $type eq 'after' ) {
-                die "after not yet supported";
-            } else {
-                die "I have no idea what to do with $type";
+    sub modifier {
+        if ($_[0]->isa('mop::method')) {
+            my $method = shift;
+            my $type   = shift;
+            my $meta   = $method->associated_meta;
+            if ($meta->isa('mop::role')) {
+                if ( $type eq 'around' ) {
+                    $meta->bind('after:COMPOSE' => sub {
+                        my ($self, $other) = @_;
+                        if ($other->has_method( $method->name )) {
+                            my $old_method = $other->remove_method( $method->name );
+                            $other->add_method(
+                                $other->method_class->new(
+                                    name => $method->name,
+                                    body => sub {
+                                        local ${^NEXT} = $old_method->body;
+                                        my $self = shift;
+                                        $method->execute( $self, [ @_ ] );
+                                    }
+                                )
+                            );
+                        }
+                    });
+                } elsif ( $type eq 'before' ) {
+                    die "before not yet supported";
+                } elsif ( $type eq 'after' ) {
+                    die "after not yet supported";
+                } else {
+                    die "I have no idea what to do with $type";
+                }
+            } elsif ($meta->isa('mop::class')) {
+                die "modifiers on classes not yet supported";
             }
-        } elsif ($meta->isa('mop::class')) {
-            die "modifiers on classes not yet supported";
         }
     }
-}```
+```
 
 It is supposed to be used like this:
 
 ```perl
-method my_method is modifier('around') ($arg) {
-    $arg % 2 and return $self->${^NEXT}(@_);
-    die "foo";
-}
+    method my_method is modifier('around') ($arg) {
+        $arg % 2 and return $self->${^NEXT}(@_);
+        die "foo";
+    }
 ```
 
-  around foo
-  method foo is modifier(around)
-  method foo is around
-* ${^NEXT} : not very nice
-* ${^SELF}
-* modifiers in roles
-* 'is' ? why use has + is ? isn't one verb enough ? in Moo*, the 'is' was just
-  one property. we had default, lazy, etc. Now, 'is' is just a seperator
-  between the name and the 'traits'
+I would like to see method modifiers in p5-mop. As per Steven Little and Jesse
+Luehrs, it may be that these won't be part of the mop, but in a plugin or
+extension. I'm not to sure about that, for me method modifier is really linked
+to OO programmning. I prefer using `around` than fiddling with
+`$self->next::method` or `$^NEXT`.
+
+Here are some syntax proposals I've gathered on IRC and blog comments regarding
+what could be method modifiers in p5-mop:
+
+    around foo { }
+    method foo is around { ... }
+    method foo is modifier(around) { ... }
+
+##  ${^NEXT} and ${^SELF}
+
+These special variables are pointing to the current instance (useful when
+you're not in a method - otherwise `$self` is available), and the next method
+in the calling chain. It's OK to have such variables, but their horrible name
+makes it difficult to remember and use.
+
+Can't we have yet an other type of twigils for these variables ? so that we can
+write `$^NEXT` and `$^SELF`.
+
+## Twigils for public / private attributes
+
+Just an idea, but maybe we could have `$!public_attribute` and
+`$.private_attribute`. Or is it the other way around ?
+
+## is ? we already have `has`
+
+OK this one thing is bothering me a lot: why do we have to use the word `is`
+when declaring an attribute? The attribute declaration starts with `has`. So
+with `is`, that makes it *two* _verbs_ for *one* line of code. For me it's too
+much. in Moo*, the `is` was just one property. we had `default`, `lazy`, etc.
+Now, `is` is just a seperator between the name and the 'traits'. In my opinion,
+it's redundant. 
 
 ## Exporter
 
@@ -383,7 +402,6 @@ sub foo is exportable { ... }
 
 But that is not yet impemented.
 
-
 ## Inside Out objects versus blessed structure objects
 
 p5-mop is not using the standard scheme where an object is simply a blessed
@@ -399,7 +417,7 @@ blessed structured objects. So why use inside out objects?
 
 At first it 
 
-## Where now ?
+# Where now ?
 
 Now, it's your turn to try it out, make up your mind, try to port an
 module or write on from scratch using p5-mop, and give your feedback. To do
