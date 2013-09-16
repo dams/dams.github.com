@@ -258,7 +258,6 @@ be either:
 * present and defined ( be it true or false
 * a true value
 
-
 Because the attributes get a twigil variable created, it's currently impossible
 to make the distinction between an attribute being unset or undef. That could
 be changed, by adding a marker on the variable, having a special method to know
@@ -266,6 +265,7 @@ if an attribute has been set, or a different technique.
 
 But Stevan said that it wasn't bothering him too much. For developers new to
 OO, it seems weird to tell them that their attributes can have
+
 
 
 That's probably too many cases... Getting rid of one of them looks sane to me.
