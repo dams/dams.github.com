@@ -1,6 +1,6 @@
 ---
 layout: post
-title: p5-mop: external feedback
+title: p5-mop: a gentle introduction
 ---
 
 # {{ page.title }}
@@ -11,26 +11,41 @@ I guess that you've heard about p5-mop by now.
 
 If not, in a nutshell, p5-mop is an attempt to implement a subset of
 [Moose](http://moose.iinteractive.com/) into the core of Perl. Moose provides a
-Meta Object Protocol to Perl. So does p5-mop, however p5-mop is implemented in
-a way that it can be properly included in the Perl core.
+Meta Object Protocol (MOP) to Perl. So does p5-mop, however p5-mop is
+implemented in a way that it can be properly included in the Perl core.
 
-Keep in mind that p5-mop goal is ti implement a _subset_ of Moose, and. As
+Keep in mind that p5-mop goal is to implement a _subset_ of Moose, and. As
 Stevan Little says:
 
-> we are not putting "Moose into the core" because Moose is too opinionated,
+> We are not putting "Moose into the core" because Moose is too opinionated,
 > instead we want to put a minimal and less opinionated MOP in the core that is
 > capable of hosting something like Moose
 
-As far as I understood, after trying to hack directly in the core, Stevan
-Little restarted the p5-mop implementation: the so called p5-mop-redux
+As far as I understood, after a first attempt that failed, Stevan Little
+restarted the p5-mop implementation: the so called p5-mop-redux
 [github project](https://github.com/stevan/p5-mop-redux), using
 [Devel::Declare](https://metacpan.org/module/Devel::Declare), ( then
 [Parse::Keyword](https://metacpan.org/module/Parse::Keyword) ), so that he can
 experiment and release often, while keeping the implementation core-friendly.
 Once he's happy with the features and all, he'll make sure it finds its way to
-the core. A small team (Steven Little, [Jesse Luehrs](http://tozt.net/), and
+the core. A small team (Stevan Little, [Jesse Luehrs](http://tozt.net/), and
 other contributors) is actively developping p5-mop, and Stevan is regularly
 [blogging about it](http://blogs.perl.org/users/stevan_little/).
+
+If you want more details about the failing first attempt, there is a bunch of
+backlog and mailing lists archive to read. However, here is how Stevan would
+summarize it:
+
+> We started the first prototype, not remembering the old adage of "write the
+> first one to throw away" and I got sentimentally attached to my choice of
+> design approach. This new approach [p5-moop-redux] was purposfully built with
+> a firm commitment to keeping it as simple as possible, therefore making it
+> simpler to hack on.
+> Also, instead of making the MOP i always wanted, I approached as building the
+> mop people actually needed (one that worked well with existing perl classes,
+> etc)
+
+
 
 Few months ago, when p5-mop-redux was announced, I tried to give it a go. And
 you should too ! Because it's easy.
@@ -39,7 +54,7 @@ you should too ! Because it's easy.
 
 It's important to have at least a vague idea of where p5-mop stands at, because
 this project is shaping a big part of Perl's future. IMHO, there will be a
-_before_ and an _after_ having a mop in core. And it is being designed and
+_before_ and an _after_ having a MOP in core. And it is being designed and
 tested _right_ _now_. So as Perl users, it's our chance to have a look at it,
 test it, and give our feedback.
 
@@ -154,12 +169,10 @@ When declaring an attribute name, you can add `is`, which is followed by a list 
 _traits_:
 
 ```perl
-    has $!foo is ro, required = 42;
     has $!bar is ro, lazy = $_->foo + 2;
 ```
 
 * `ro` / `rw` means it's read-only / read-write
-* `required` means it's a mandatory attribute
 * `lazy` means the attribute constructor we'll be called only when the
 attribute is being used
 * `weak_ref` enables an attribute to be a weak reference
@@ -245,14 +258,13 @@ existence of the attributes, but their define-ness!" You're right, but read on!
 
 ## Undef versus not set
 
-_THIS SECTION IS NOT FINISHED TODO_
-
 In Moose there is a difference between an attribute being unset, and an
-attribute being undef. In p5-mop, there is no such distinction. The reason for
-this is partially technical, and maybe partially a design decision.
+attribute being undef. In p5-mop, there is no such distinction. Technically, it
+would be very difficult to implemente that distinction, because an attribute
+variable is declared even if the attribute has not been set yet.
 
-Technically, because Moose stores objects in blessed hashes, an attribute can
-be either:
+In Moose, because objects are stored in blessed hashes, an attribute can either
+be:
 
 * non-existent in the underlying hash
 * present in the hash but with an undef value
@@ -261,20 +273,22 @@ be either:
 
 That's probably too many cases... Getting rid of one of them looks sane to me.
 
+After all, we got this "not set" state only because objects are stored in
+HashRef, so it looks like it's an implementation detail that made its way into
+becoming a concept on its own, which is rarely a good thing.
+
 Plus, in standard Perl programming, if an optional argument is not passed to a
-function, it's not "non-existent", it's _undef_. So it makes sense to have a
-similar behavior in mop. After all, we got this "not set" state only because
-objects are stored in HashRef, so it looks like it's an implementation detail
-that made its way into becoming a concept on its own.
+function, it's not "non-existent", it's _undef_:
 
-Because the attributes get a twigil variable created, it's currently impossible
-to make the distinction between an attribute being unset or undef. That could
-be changed, by adding a marker on the variable, having a special method to know
-if an attribute has been set, or a different technique.
+```perl
+    foo();
+    sub foo {
+	    my ($arg) = @_; # $arg is undef
+    }
+```
 
-But Stevan said that it wasn't bothering him too much. For developers new to
-OO, it seems weird to tell them that their attributes can have
-
+So it makes sense to have a similar behavior in p5-mop - that is, an attribute
+that is not set is undef.
 
 ## Roles
 
@@ -357,11 +371,11 @@ It is supposed to be used like this:
     }
 ```
 
-I would like to see method modifiers in p5-mop. As per Steven Little and Jesse
+I would like to see method modifiers in p5-mop. As per Stevan Little and Jesse
 Luehrs, it may be that these won't be part of the mop, but in a plugin or
 extension. I'm not to sure about that, for me method modifier is really linked
 to OO programmning. I prefer using `around` than fiddling with
-`$self->next::method` or `$^NEXT`.
+`$self->next::method` or `${^NEXT}`.
 
 Here are some syntax proposals I've gathered on IRC and blog comments regarding
 what could be method modifiers in p5-mop:
@@ -385,14 +399,19 @@ write `$^NEXT` and `$^SELF`.
 Just an idea, but maybe we could have `$!public_attribute` and
 `$.private_attribute`. Or is it the other way around ?
 
-## is ? we already have `has`
+## why is ? we already have `has` !
 
 OK this one thing is bothering me a lot: why do we have to use the word `is`
 when declaring an attribute? The attribute declaration starts with `has`. So
 with `is`, that makes it *two* _verbs_ for *one* line of code. For me it's too
 much. in Moo*, the `is` was just one property. we had `default`, `lazy`, etc.
 Now, `is` is just a seperator between the name and the 'traits'. In my opinion,
-it's redundant. 
+it's redundant.
+
+The authors' view on this can be summarized with this list:
+* it's how Perl6 does it
+* "blame Larry"
+* If I insist, they may add a comma
 
 ## Exporter
 
@@ -417,7 +436,7 @@ trait, like `exportable`:
 sub foo is exportable { ... }
 ```
 
-But that is not yet impemented.
+But that is not yet implemented.
 
 ## Inside Out objects versus blessed structure objects
 
@@ -431,8 +450,6 @@ This way of doing may seem odd at first: if I recall correctly, there a time
 where InsideOut objects were trendy, especially using `Class::Std`. But that
 didn't last long, when Moose and its follow ups came back to using regular
 blessed structured objects. So why use inside out objects?
-
-_THIS SECTION IS NOT FINISHED TODO_
 
 At first it 
 
@@ -450,9 +467,18 @@ instance on [blogs.perl.org](blogs.perl.org)
 Lastly, don't hesitate to participate in the comments below :) Especially if
 you don't agree with my remarks above.
 
-## Reference
+## Reference / See also
 
 * [p5-mop-redux on github](https://github.com/stevan/p5-mop-redux)
 * [twigils on github](https://github.com/rafl/twigils)
 * [Moose to mop tutorial](https://github.com/stevan/p5-mop-redux/blob/master/lib/mop/manual/tutorials/moose_to_mop.pod)
+* [Moose project homepage](http://moose.iinteractive.com/)
+* [Moops]()
 
+## Contributors
+This article has been written by [Damien Krotkine](Damien Krotkine), but these people helped
+proof-reading it:
+* Stevan Little
+* Jesse Luehrs
+* Toby Inkster
+* Lukas Atkinson
