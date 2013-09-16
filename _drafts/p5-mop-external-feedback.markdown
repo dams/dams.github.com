@@ -14,16 +14,23 @@ If not, in a nutshell, p5-mop is an attempt to implement a subset of
 Meta Object Protocol to Perl. So does p5-mop, however p5-mop is implemented in
 a way that it can be properly included in the Perl core.
 
+Keep in mind that p5-mop goal is ti implement a _subset_ of Moose, and. As
+Stevan Little says:
+
+> we are not putting "Moose into the core" because Moose is too opinionated,
+> instead we want to put a minimal and less opinionated MOP in the core that is
+> capable of hosting something like Moose
+
 As far as I understood, after trying to hack directly in the core, Stevan
-Little restarted the p5-mop implementation: the so called p5-mop-redux [github
-project](https://github.com/stevan/p5-mop-redux), using
+Little restarted the p5-mop implementation: the so called p5-mop-redux
+[github project](https://github.com/stevan/p5-mop-redux), using
 [Devel::Declare](https://metacpan.org/module/Devel::Declare), ( then
 [Parse::Keyword](https://metacpan.org/module/Parse::Keyword) ), so that he can
 experiment and release often, while keeping the implementation core-friendly.
 Once he's happy with the features and all, he'll make sure it finds its way to
 the core. A small team (Steven Little, Jesse Luehrs, and other contributors) is
-actively developping p5-mop, and Stevan is regularly [blogging about
-it](http://blogs.perl.org/users/stevan_little/).
+actively developping p5-mop, and Stevan is regularly
+[blogging about it](http://blogs.perl.org/users/stevan_little/).
 
 Few months ago, when p5-mop-redux was announced, I tried to give it a go. And
 you should too ! Because it's easy.
@@ -49,16 +56,15 @@ p5-mop is very easy to install:
 1. if you're using github, just fork the `p5-mop-redux` project. Otherwise you can get a zip [here](https://github.com/stevan/p5-mop-redux/archive/master.zip).
 2. if you don't have cpanm, get it with `curl -L http://cpanmin.us | perl - App::cpanminus`
 3. using cpanm, execute `cpanm .` from within the p5-mop-redux directory.
-4. you'll need to do the same with twigil: either fork the `twigils` project,
+4. you'll need to do the same with twigils: either fork the `twigils` project,
    or get a zip [here](https://github.com/rafl/twigils/archive/master.zip).
 5. then cpanm, execute `cpanm .` from within the twigils directory.
 
-## Classes ##
+## A first example ##
 
 Here is the classical point example from the [p5-mop test suite](https://github.com/stevan/p5-mop-redux/blob/master/t/001-examples/001-point.t)
  
 ```perl
-
     use mop;
     
     class Point {
@@ -99,33 +105,50 @@ Here is the classical point example from the [p5-mop test suite](https://github.
     }
 ```
 
-So this examples shows how straightforward it is to declare a class and a
+This examples shows how straightforward it is to declare a class and a
 subclass. The syntax is very friendly and similar to what you may find in other
-langauges. A class can inherit from an other one by `extend`ing it.
+languages.
 
-Few notes:
+`class` declares a class, with proper scoping. `method` is used to define
+methods, so no `sub` there. The distinction is important, because in _methods_,
+additional variables will be automatically available:
+
+* `$self` will be available directly, no need to shift `@_`.
+* attributes variable will be available automatically, so you can access
+  attributes from within the class without having to use their
+  `$self->accessors`.
+
+Fucntions defined with the regular `sub` keyword won't have all these features,
+and
+
+`has`declares an attribute,
+which can have so-called _traits_. Attribute names are *twigils*. Borrowed from
+Perl6, and implemented by Florian Ragwitz in its
+[twigils project on github](https://github.com/rafl/twigils/), twigils are
+useful to differenciate standard variables from attributes variables:
+
+class Foo {
+    has $!stuff;
+	method do_stuff ($stuff) {
+        $!stuff = $stuff,
+    }
+}
+
+
+
+However, you'll probably notice few interesting syntactic styles. First of all,
+there is no need to add trailing semi-colon at the end of class and method
+blocks.
+
+Second, what are these `$!stuff` ? These special variable names are
+called twigils. We'll come back to that.
+
+Other notes worth mentiong:
+* A class can inherit from an other one by `extend`ing it.
 * Classes can have a `BUILD` method, as with Moose.
 * In a inheriting class, calling the parent method is not done using `SUPER`,
   but `$self->next::method`.
 * A class `Foo` declared in the package `Bar` will be defined as `Bar::Foo`.
-
-## Roles
-
-```perl
-role Bar {
-    has $!additional_attr = 42;
-    method more_feature { say $!additional_attr }
-}
-```
-
-Roles are defined in a straightforward way. They are consumed by the class
-right in the class declaration line:
-
-```perl
-class Foo with Bar, Baz {
-    # ...
-}
-```
 
 ## Attributes traits ##
 
@@ -214,12 +237,40 @@ ourselves.
 But I hear you say "Wait, these are no clearer nor predicate ! They are not testing the
 existence of the attributes, but their defineness!" You're right, but read on!
 
+## Roles
+
+Roles definition syntax is quite similar to defining a class.
+
+```perl
+    role Bar {
+        has $!additional_attr = 42;
+        method more_feature { say $!additional_attr }
+    }
+```
+
+They are consumed right in the class declaration line:
+
+```perl
+    class Foo with Bar, Baz {
+        # ...
+    }
+```
+
 # My humble constructive remarks #
 
 ## Undef versus not set
 In Moose there is a difference between an attribute being unset, and an
 attribute being undef. In p5-mop, there is no such distinction. The reason for
 this is partially technical, and maybe partially a design decision.
+
+Technically, because Moose stores objects in blessed hashes, an attribute can
+be either:
+
+* non-existent in the underlying hash
+* present in the hash but with an undef value
+* present and defined ( be it true or false
+* a true value
+
 
 Because the attributes get a twigil variable created, it's currently impossible
 to make the distinction between an attribute being unset or undef. That could
@@ -229,10 +280,6 @@ if an attribute has been set, or a different technique.
 But Stevan said that it wasn't bothering him too much. For developers new to
 OO, it seems weird to tell them that their attributes can have
 
-* no value
-* an undef value
-* a false value
-* a true value
 
 That's probably too many cases... Getting rid of one of them looks sane to me.
 Plus, in standard Perl programming, if an optional argument is not passed to a
