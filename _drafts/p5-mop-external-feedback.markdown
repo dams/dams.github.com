@@ -58,44 +58,45 @@ p5-mop is very easy to install:
 Here is the classical point example from the [p5-mop test suite](https://github.com/stevan/p5-mop-redux/blob/master/t/001-examples/001-point.t)
  
 ```perl
-use mop;
 
-class Point {
-    has $!x is ro = 0;
-    has $!y is ro = 0;
-
-    method set_x ($x) {
-        $!x = $x;
+    use mop;
+    
+    class Point {
+        has $!x is ro = 0;
+        has $!y is ro = 0;
+    
+        method set_x ($x) {
+            $!x = $x;
+        }
+    
+        method set_y ($y) {
+            $!y = $y;
+        }
+    
+        method clear {
+            ($!x, $!y) = (0, 0);
+        }
+    
+        method pack {
+            +{ x => $self->x, y => $self->y }
+        }
     }
-
-    method set_y ($y) {
-        $!y = $y;
+    
+    # ... subclass it ...
+    
+    class Point3D extends Point {
+        has $!z is ro = 0;
+    
+        method set_z ($z) {
+            $!z = $z;
+        }
+    
+        method pack {
+            my $data = $self->next::method;
+            $data->{z} = $!z;
+            $data;
+        }
     }
-
-    method clear {
-        ($!x, $!y) = (0, 0);
-    }
-
-    method pack {
-        +{ x => $self->x, y => $self->y }
-    }
-}
-
-# ... subclass it ...
-
-class Point3D extends Point {
-    has $!z is ro = 0;
-
-    method set_z ($z) {
-        $!z = $z;
-    }
-
-    method pack {
-        my $data = $self->next::method;
-        $data->{z} = $!z;
-        $data;
-    }
-}
 ```
 
 So this examples shows how straightforward it is to declare a class and a
