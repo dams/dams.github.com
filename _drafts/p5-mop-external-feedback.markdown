@@ -22,7 +22,7 @@ Stevan Little says:
 > capable of hosting something like Moose
 
 As far as I understood, after a first attempt that failed, Stevan Little
-restarted the p5-mop implementation: the so called p5-mop-redux
+restarted the p5-mop implementation: the so-called p5-mop-redux
 [github project](https://github.com/stevan/p5-mop-redux), using
 [Devel::Declare](https://metacpan.org/module/Devel::Declare), ( then
 [Parse::Keyword](https://metacpan.org/module/Parse::Keyword) ), so that he can
@@ -41,7 +41,7 @@ summarize it:
 > design approach. This new approach [p5-moop-redux] was purposfully built with
 > a firm commitment to keeping it as simple as possible, therefore making it
 > simpler to hack on.
-> Also, instead of making the MOP i always wanted, I approached as building the
+> Also, instead of making the MOP I always wanted, I approached as building the
 > mop people actually needed (one that worked well with existing perl classes,
 > etc)
 
@@ -399,7 +399,7 @@ write `$^NEXT` and `$^SELF`.
 Just an idea, but maybe we could have `$!public_attribute` and
 `$.private_attribute`. Or is it the other way around ?
 
-## why is ? we already have `has` !
+## why `is` ? we already have `has` !
 
 OK this one thing is bothering me a lot: why do we have to use the word `is`
 when declaring an attribute? The attribute declaration starts with `has`. So
@@ -408,10 +408,19 @@ much. in Moo*, the `is` was just one property. we had `default`, `lazy`, etc.
 Now, `is` is just a seperator between the name and the 'traits'. In my opinion,
 it's redundant.
 
-The authors' view on this can be summarized with this list:
-* it's how Perl6 does it
-* "blame Larry"
-* If I insist, they may add a comma
+Also, among the new keywords added by p5-mop, we have only _nouns_ (`class`,
+`role`, `method`). Only one _verb_, `has`.
+
+The counter argument on this is that this syntax is inspired by Perl6:
+
+```perl
+    class Point is rw {
+        has ($.x, $.y);
+        method gist { "Point a x=$.x y=$.y" }
+    }
+```
+
+So, "blame Larry" ? :)
 
 ## Exporter
 
@@ -443,17 +452,24 @@ But that is not yet implemented.
 p5-mop is not using the standard scheme where an object is simply a blessed
 structure (usually a `HashRef`). Instead, it's using InsideOut objects, where
 all you get as an object is some kind of identification number (usually a
-simple reference), which is used internally to retreieve the object properties,
+simple reference), which is used internally to retrieve the object properties,
 only accessible from within the class.
 
 This way of doing may seem odd at first: if I recall correctly, there a time
 where InsideOut objects were trendy, especially using `Class::Std`. But that
 didn't last long, when Moose and its follow ups came back to using regular
-blessed structured objects. So why use inside out objects?
+blessed structured objects.
 
-At first it 
+The important thing to keep in mind is that it doesn't matter too much. Using
+inside out objects is not a big deal because p5-mop provides so much power to
+interact and introspect with the OO concepts that it's not a problem at all
+that the attributes are not in a blessed HashRef.
 
-# Where now ?
+However, a lot of third-party modules _assume_ that your objects are blessed
+HashRef. So when switching to p5-mop, a whole little ecosystem will need to be
+rewritten.
+
+# Now, where to ?
 
 Now, it's your turn to try it out, make up your mind, try to port an
 module or write on from scratch using p5-mop, and give your feedback. To do
@@ -462,7 +478,7 @@ and explain what you tried, what went well and what didn't, and how you feel
 about the syntax and concepts.
 
 Also, spread the word by writing about your experience with p5-mop, for
-instance on [blogs.perl.org](blogs.perl.org)
+instance on [blogs.perl.org](blogs.perl.org).
 
 Lastly, don't hesitate to participate in the comments below :) Especially if
 you don't agree with my remarks above.
