@@ -432,13 +432,15 @@ where InsideOut objects were trendy, especially using `Class::Std`. But that
 didn't last long, when Moose and its follow ups came back to using regular
 blessed structured objects. So why use inside out objects?
 
+_TODO_
+
 At first it 
 
 # Where now ?
 
 Now, it's your turn to try it out, make up your mind, try to port an
 module or write on from scratch using p5-mop, and give your feedback. To do
-that, go to the IRC channel #p5-mop on the irc.mongueurs.net server, say hi,
+that, go to the IRC channel #p5-mop on the irc.perl.org server, say hi,
 and explain what you tried, what went well and what didn't, and how you feel
 about the syntax and concepts.
 
