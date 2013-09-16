@@ -75,7 +75,7 @@ p5-mop is very easy to install:
 
 Here is the classical point example from the [p5-mop test suite](https://github.com/stevan/p5-mop-redux/blob/master/t/001-examples/001-point.t)
  
-```perl
+{% highlight perl %}
 use mop;
 
 class Point {
@@ -114,7 +114,7 @@ class Point3D extends Point {
         $data;
     }
 }
-```
+{% endhighlight %}
 
 This examples shows how straightforward it is to declare a class and a
 subclass. The syntax is very friendly and similar to what you may find in other
@@ -138,14 +138,14 @@ and implemented by Florian Ragwitz in its
 [twigils project on github](https://github.com/rafl/twigils/), twigils are
 useful to differenciate standard variables from attributes variables:
 
-```perl
+{% highlight perl %}
 class Foo {
     has $!stuff;
 	method do_stuff ($stuff) {
         $!stuff = $stuff;
     }
 }
-```
+{% endhighlight %}
 
 As you can see, it's important to be able to differenciate `stuff` (the
 variable) and `stuff` (the attribute).
@@ -166,9 +166,9 @@ Other notes worth mentiong:
 When declaring an attribute name, you can add `is`, which is followed by a list of
 _traits_:
 
-```perl
+{% highlight perl %}
 has $!bar is ro, lazy = $_->foo + 2;
-```
+{% endhighlight %}
 
 * `ro` / `rw` means it's read-only / read-write
 * `lazy` means the attribute constructor we'll be called only when the
@@ -177,24 +177,24 @@ attribute is being used
 
 ## Default value / builder ##
 
-```perl
+{% highlight perl %}
 has $!foo = 'default value';
-```
+{% endhighlight %}
 
 which is actually
 
-```perl
+{% highlight perl %}
 has $!foo = sub { 'default value' };
-```
+{% endhighlight %}
 
 So, there is no default value, only builders. That means that `has $!foo = {};`
 will work as expected ( creating a new hashref each time ).
 
 You can reference the current instance in the attribute builder by using `$_`:
 
-```perl
+{% highlight perl %}
 has $!foo = $_->_init_foo;
-```
+{% endhighlight %}
 
 There has been some comments about using `=` instead of `//` or `||` or
 `default`, but this syntax is used in a lot of other programing language, and
@@ -206,11 +206,11 @@ considered somehow the default (ha-ha) syntax. I think it's worth sticking with
 When calling a method, the parameters are as usual available in `@_`. However
 you can also declare these parameters in the method signature:
 
-```perl
+{% highlight perl %}
 method foo ($arg1, $arg2=10) {
     say $arg1;
 }
-```
+{% endhighlight %}
 
 Using `=` you can specify a default value. In the method body, these parameters
 will be available directly.
@@ -233,13 +233,13 @@ checking.
 Because the attribute builder is already implemented using `=`, what about
 clearer and predicate?
 
-```perl
+{% highlight perl %}
 # clearer
 method clear_foo { undef $!foo }
 
 # predicate
 method has_foo { defined $!foo }
-```
+{% endhighlight %}
 
 That was pretty easy, right? Predicates and clearers have been introduced in
 Moose because writing them ourselves would require to access the underlying
@@ -278,12 +278,12 @@ becoming a concept on its own, which is rarely a good thing.
 Plus, in standard Perl programming, if an optional argument is not passed to a
 function, it's not "non-existent", it's _undef_:
 
-```perl
+{% highlight perl %}
 foo();
 sub foo {
     my ($arg) = @_; # $arg is undef
 }
-```
+{% endhighlight %}
 
 So it makes sense to have a similar behavior in p5-mop - that is, an attribute
 that is not set is undef.
@@ -292,20 +292,20 @@ that is not set is undef.
 
 Roles definition syntax is quite similar to defining a class.
 
-```perl
+{% highlight perl %}
 role Bar {
     has $!additional_attr = 42;
     method more_feature { say $!additional_attr }
 }
-```
+{% endhighlight %}
 
 They are consumed right in the class declaration line:
 
-```perl
+{% highlight perl %}
 class Foo with Bar, Baz {
     # ...
 }
-```
+{% endhighlight %}
 
 ## Meta ##
 
@@ -322,7 +322,7 @@ Method modifiers are not yet implemented, but they won't be difficult to
 implement. Actually, here is an example of how to implement method modifiers
 using p5-mop very own meta. It implements `around`:
 
-```perl
+{% highlight perl %}
 sub modifier {
     if ($_[0]->isa('mop::method')) {
         my $method = shift;
@@ -358,16 +358,16 @@ sub modifier {
         }
     }
 }
-```
+{% endhighlight %}
 
 It is supposed to be used like this:
 
-```perl
+{% highlight perl %}
 method my_method is modifier('around') ($arg) {
     $arg % 2 and return $self->${^NEXT}(@_);
     die "foo";
 }
-```
+{% endhighlight %}
 
 I would like to see method modifiers in p5-mop. As per Stevan Little and Jesse
 Luehrs, it may be that these won't be part of the mop, but in a plugin or
@@ -411,12 +411,12 @@ Also, among the new keywords added by p5-mop, we have only _nouns_ (`class`,
 
 The counter argument on this is that this syntax is inspired by Perl6:
 
-```perl
+{% highlight perl %}
 class Point is rw {
     has ($.x, $.y);
     method gist { "Point a x=$.x y=$.y" }
 }
-```
+{% endhighlight %}
 
 So, "blame Larry" ? :)
 
@@ -439,9 +439,9 @@ implementation should be in charge of implementing an Exporter module, and I
 can totally agree with this. So it looks like the solution will be a method
 trait, like `exportable`:
 
-```perl
+{% highlight perl %}
 sub foo is exportable { ... }
-```
+{% endhighlight %}
 
 But that is not yet implemented.
 
