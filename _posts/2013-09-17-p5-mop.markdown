@@ -200,6 +200,14 @@ There has been some comments about using `=` instead of `//` or `||` or
 considered somehow the default (ha-ha) syntax. I think it's worth sticking with
 `=` for an easier learning curve for newcomers.
 
+## Class and method traits ##
+
+**UPDATE**: Similarly to attributes, classes and methods can have traits. I
+won't go in details to keep this post short, but you can make a class abstract,
+change the default behaviour of all its attributes, make it work better with
+Moose, etc. Currently there is only one method trait to allow for operator
+overloading, but additional ones may appear shortly.
+
 ## Methods parameters ##
 
 When calling a method, the parameters are as usual available in `@_`. However
@@ -465,6 +473,12 @@ that the attributes are not in a blessed HashRef.
 However, a lot of third-party modules _assume_ that your objects are blessed
 HashRef. So when switching to p5-mop, a whole little ecosystem will need to be
 rewritten.
+
+**UPDATE**: ilmari pointed out in the comments that there is a class trait
+called <code>repr</code> that makes it possible to change the way an instance
+is implemented. You can specify if an object should be a reference on a scalar,
+array, hash, glob, or even a reference on a provided CodeRef. This makes p5-mop
+objects much more compatible with the OO ecosystem.
 
 # Now, where to ?
 
