@@ -432,8 +432,8 @@ So, "blame Larry" ? :)
 
 p5-mop doesn't use @ISA for inheritance, so `use base 'Exporter'` won't work.
 You have to do `use Exporter 'import'`. That is somewhat disturbing because
-most Perl developers (I think) implement classes by inheriting from Exporter
-(that's also what the documentation of Exporter recommends).
+most Perl developers (I think) implement symbols export by inheriting from
+Exporter (that's also what the documentation of Exporter recommends).
 
 You could argue that one should code clean classes (that don't export anything,
 and clean modules (that export stuff but don't do OO). Mixing OO in a class
