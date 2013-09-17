@@ -64,6 +64,7 @@ provide feedback.
 
 p5-mop is very easy to install:
 
+0. you need at least perl 5.16. If you need to upgrade, consider [perlbrew](http://perlbrew.pl/) or [plenv](https://github.com/tokuhirom/plenv)
 0. if you don't have cpanm, get it with `curl -L http://cpanmin.us | perl - App::cpanminus`
 1. first, we need to install twigils, with `cpanm --dev twigils`
 2. if you're using github, just fork the `p5-mop-redux` project. Otherwise you can get a zip [here](https://github.com/stevan/p5-mop-redux/archive/master.zip).
