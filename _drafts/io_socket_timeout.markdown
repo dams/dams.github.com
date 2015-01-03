@@ -11,21 +11,20 @@ use `IO::Socket::Timeout` to add read/write timeouts to any net socket you've cr
 `IO::Socket::INET`, on any platform:
 
 {% highlight perl %}
-
-# 1. creates a socket as usual
-my $socket = IO::Socket::INET->new( ... );
-
-# 2. enable read and write timeouts on the socket
-IO::Socket::Timeout->enable_timeouts_on($socket);
-
-# 3. setup the timeouts
-$socket->read_timeout(0.5);
-$socket->write_timeout(0.5);
-
-# 4. use the socket as usual
-$socket->...
-
-# 5. Profit!
+  # 1. creates a socket as usual
+  my $socket = IO::Socket::INET->new( ... );
+  
+  # 2. enable read and write timeouts on the socket
+  IO::Socket::Timeout->enable_timeouts_on($socket);
+  
+  # 3. setup the timeouts
+  $socket->read_timeout(0.5);
+  $socket->write_timeout(0.5);
+  
+  # 4. use the socket as usual
+  $socket->...
+  
+  # 5. Profit!
 {% endhighlight %}
 
 Yes, it works with any INET socket. Yes, it should work on any platform (see
@@ -34,10 +33,10 @@ below). Yes, it inflates `$socket` with new methods on the fly. See
 
 ## Intro ##
 
-It's been a long time since last time I blogged, roughly one year. That was for
-various reasons, one of them being that I changed job to work at Booking.com
-(awesome company) roughly at that time. Anyway, I'll try to catch up with
-things I've been working on, so expect some more blog posts soon, yay!
+It's been a long time since last time I blogged, more than one year. That was
+for various reasons, one of them being that I changed job to work at
+Booking.com (awesome company) roughly at that time. Anyway, I'll try to catch
+up with things I've been working on, so expect some more blog posts soon.
 
 The `IO::Socket::Timeout` idea came from a recurrent requirement. I was then
 working on `Bloomd::Client` (see blog post here), `Redis` (see blog post here),
@@ -60,7 +59,7 @@ to connect to a local http server on port 80, with a connection timeout of 3
 seconds:
 
 {% highlight perl %}
-my $socket = IO::Socket::INET->new(
+  my $socket = IO::Socket::INET->new(
     PeerHost  => '127.0.0.1',
     PeerPort  => 80,
     Timeout   => 3,
@@ -79,11 +78,11 @@ write timeouts. This is an example that works on linux, given `$timeout:` in
 (possibly fractional) seconds:
 
 {% highlight perl %}
-my $seconds = int( $timeout );
-my $useconds = int( 1_000_000 * ($timeout-$seconds) );
-my $t = pack( 'l!l!', $seconds, $useconds );
-$socket->setsockopt(SOL_SOCKET, SO_RCVTIMEO, $t)
-# then use $socket as usual
+  my $seconds = int( $timeout );
+  my $useconds = int( 1_000_000 * ($timeout-$seconds) );
+  my $t = pack( 'l!l!', $seconds, $useconds );
+  $socket->setsockopt(SOL_SOCKET, SO_RCVTIMEO, $t)
+  # then use $socket as usual
 {% endhighlight %}
 
 It is simple enough, but it works only on some architecture/OS. As I wanted a
@@ -99,10 +98,10 @@ gives access to it. Here is a simplified version of a function that returns
 true if we can read on the socket with the given timeout:
 
 {% highlight perl %}
-sub _can_read {
-  my ($file_desc, $timeout) = @_;
-  vec(my $fdset = '', $file_desc, 1) = 1;
-  $nfound = select($fdset, undef, undef, $timeout);
+  sub _can_read {
+    my ($file_desc, $timeout) = @_;
+    vec(my $fdset = '', $file_desc, 1) = 1;
+    $nfound = select($fdset, undef, undef, $timeout);
 }
 {% endhighlight %}
 
@@ -119,8 +118,8 @@ What I wanted to achieve, is to abstract these two ways of setting timeouts,
 behind a simple and easy to use API. Let's consider this example:
 
 {% highlight perl %}
-my $socket = IO::Socket::INET->new( ... );
-print $socket "something";
+  my $socket = IO::Socket::INET->new( ... );
+  print $socket "something";
 {% endhighlight %}
 
 You'll note that I have not used object oriented notations on the socket (like
@@ -130,16 +129,34 @@ What we want is an easiest way to be able to set timeout to the `$socket`. For
 example this:
 
 {% highlight perl %}
-my $socket = IO::Socket::INET->new( ... );
-# set timeouts
-$socket->read_timeout(0.5);
-# use the socket as before
-print $socket "something";
+  my $socket = IO::Socket::INET->new( ... );
+
+  # set timeouts
+  $socket->read_timeout(0.5);
+
+  # use the socket as before
+  print $socket "something";
+
+  # later, get the timeout value
+  my $timeout = $socket->read_timeout();
+
 {% endhighlight %}
 
-If we can use `setsockopt`, then it's easy, we can make `set_read_timeout`
-apply the appropriate `setsockopt` call on the socket, and we can carry on
-using `$socket` as before.
+### when using setsockopt
+
+If we can use `setsockopt`, then setting the timeout using
+`->read_timeout(0.5)` is easy, it can be implemented as a method that we add to
+`IO::Socket::INET` class. Probably by using a Role (we'll see that later). This
+method would just fire `setsockopt` with the right parameters, and save the
+timeout value into $socket for later retrieval. Then we can carry on using
+`$socket` as before.
+
+There is actually a subtlety because the `$socket` is not a classic HashRef
+instance, but an anonymous typeglob on a HashRef, so instead of doing
+`$socket->{ReadTimeout} = 0.5` we need to do `${*$socket}{ReadTimeout} = 0.5`.
+But that's an implementation detail.
+
+### when using select
 
 However, if we need to use the `select` method, then we have a problem. Because
 we're not using object oriented programming, operation on the socket is not
@@ -166,11 +183,11 @@ will go through the specified layers attached to the handle, until they
 potentially reach the system calls. Here is an example:
 
 {% highlight perl %}
-open(my $fh, 'filename');
-# for direct binary non-buffered access
-binmode($fh, ':raw');
-# specify that the file is in utf8, and enforce validation
-binmode($fh, ':encoding(UTF-8)'); 
+  open(my $fh, 'filename');
+  # for direct binary non-buffered access
+  binmode($fh, ':raw');
+  # specify that the file is in utf8, and enforce validation
+  binmode($fh, ':encoding(UTF-8)'); 
 {% endhighlight %}
 
 The `:via` layer is a special layer that allows anyone to implement a PerlIO
@@ -179,7 +196,7 @@ layer in pure Perl. Contrary to implementing a PerlIO layer in C, using the
 methods. The name of the class is given when setting the layer:
 
 {% highlight perl %}
-binmode($fh, ':via(MyOwnLayer)');
+  binmode($fh, ':via(MyOwnLayer)');
 {% endhighlight %}
 
 Many `:via` layers already exist, they all start with `PerlIO::via::` and are
@@ -199,15 +216,15 @@ method as an illustration. This is a very simplified version. The real version
 handles things like `EINTR` and other corner cases.
 
 {% highlight perl %}
-package PerlIO::via::Timeout;
-sub READ {
-    my ($self, $buf, $len, $fh) = @_;
-    my $fd = fileno($fh);
-    # we use the same can_read as previously
-    can_read($fd, $timeout)
-	  or return 0;
-    return sysread($fh, $buf, $len, 0);
-}
+  package PerlIO::via::Timeout;
+  sub READ {
+      my ($self, $buf, $len, $fh) = @_;
+      my $fd = fileno($fh);
+      # we use the same can_read as previously
+      can_read($fd, $timeout)
+      or return 0;
+      return sysread($fh, $buf, $len, 0);
+  }
 {% endhighlight %}
 
 The idea is to check if we can read on the filesystem using `select`, in the
@@ -256,21 +273,51 @@ So let's create a hash table as a class attribute of our new layer, where keys
 will be file descriptors, and values a set of properties on the associated
 handle. That is essentially the basic way to implement InsideOut OO, with the
 object not being its data structure, but only an id. With this hash table, we
-can 
+can associate a set of properties to a file descriptor, and set the timeout
+value when the PerlIO layer is added:
 
 {% highlight perl %}
-my $socket = IO::Socket::INET->new(...);
-# we have a scalar, not a FILEHANDLE
+  my %fd_properties;
+  
+  sub PUSHED {
+    my ($class, $mode, $fh) = @_;
+    $fd_properties{fileno($fh)} = { read_timeout => 0.5 };
+    # ...
+  }
 {% endhighlight %}
 
-Let's look at this
+By doing the same thing at removal of the layer, we have now implemented a way
+to associate the timeout values to the filehandle.
 
-# set the timeout layer to be 0.5 second read timeout
-  read_timeout($fh, 0.5);
+Wrapping up all the bits of code and features, the full package that implements
+this timeout layer is `PerlIO::via::Timeout`, available on github and CPAN.
 
+## Implement the API ##
 
+So now we have all the ingredients we need to implement the desired behaviours.
+`enable_timeouts_on` will receive the socket, and modify its class (it should
+be or inherit from `IO::Socket::INET`) to implement these methods:
 
-The full package that implements this behaviour is `PerlIO::via::Timeout`,
-available on CPAN. To use it, 
+* `read_timeout`: get/set the read timeout
+* `write_timeout`: get/set the write timeout
+* `disable_timeout`: switch off timeouts (but till remember their values)
+* `enable_timeout`: switch back on the timeouts
+* `timeout_enabled`: returns wether the timeouts are enabled
+
+However, we want to modify the `IO::Socket::INET` class in a clean way. For
+that, we'll create a role and apply it to the class. Actually we'll create two
+roles, one that will implement the various methods the `setsockopt` way, and an
+other role using the `select` (so with the `PerlIO::via`) way.
+
+Detailing the implementation of the role mechanism here is a bit out of the
+scope, but it's still interesting to note that to keep
+`IO::Socket::Timeout`lightweight, we didn't use `Moose::Role`, nor `Moo::Role`,
+but basically applied a stripped down variant of `Role::Tiny`, which uses
+single inheritance of a special class crafted in real time specificaly for the
+targeted class. The code is short and can be seen here
+https://github.com/dams/io-socket-timeout/blob/master/lib/IO/Socket/Timeout.pm#L187
+
+## Wrapp it up
+
 
 
