@@ -5,9 +5,9 @@ title: Exception::Stringy - Modern exceptions for legacy code
 
 # {{ page.title }}
 
-## A small recap of Perl exceptions
+# A small recap of Perl exceptions
 
-### Basic Usage Of Exceptions
+## Basic Usage Of Exceptions
 
 In Perl, exceptions are a well known and widely used mechanism. It is an old
 feature that has been enhanced over time. At the basic level, exceptions are
@@ -44,7 +44,7 @@ and goes like this:
     };
 {% endhighlight %}
 
-### Throwing Objects
+## Throwing Objects
 
 The good thing about `die` (or `croak`), is that it's very easy to use, when
 given a string. It's perfect for using in scripts, or moderately big
@@ -92,7 +92,7 @@ failing to open a file:
 {% endhighlight %}
 
 
-### Catching Objects Exceptions
+## Catching Objects Exceptions
 
 When using objects as exceptions, a set of features becomes available, thanks
 to Object Oriented Programming. Inheritance, attributes and introspection are
@@ -121,10 +121,10 @@ As you can see, it's easy to introspect an exception if it's an object. In this
 case we use the `isa` keyword to know if the exception is or inherits from a
 given class name.
 
-## When things go wrong
+# When things go wrong
 
 
-### Mixing Objects And String Exceptions
+## Mixing Objects And String Exceptions
 
 As we saw in the previous chapter, Perl allows exceptions being whatever you
 like (string, objects, but actually numbers, structures, etc, work as well).
@@ -156,7 +156,7 @@ and objects. This can be done via this kind of code:
     };
 {% endhighlight %}
 
-### Mixed Exceptions Issues
+## Mixed Exceptions Issues
 
 The previous code snippet suffers from increased complexity due to the
 additional checks and two different codepaths for handling potential errors.
@@ -203,7 +203,7 @@ time, nor at execution time, but at *exception time*, which is the worst
 time...
 
 
-### The Overloaded Stringification Route
+## The Overloaded Stringification Route
 
 So at that point, most developers will choose the following strategy. Use
 object exceptions for their code, but guard against receiving string exceptions,
@@ -224,9 +224,9 @@ way we would have the best of both worlds
 This is what `Exception::Stringy` tries to achieve.
 
 
-## Exceptions::Stringy from scratch
+# Exceptions::Stringy from scratch
 
-### The Needed Features
+## The Needed Features
 
 A perfect exception would have these features:
 
@@ -245,7 +245,7 @@ exception with these attributes:
 * which inherits from MyException
 * with a field `filename`
 
-### Class Instance
+## Class Instance
 
 Let's start with the first feature: *be a string, containing an error message*.
 That's easy:
@@ -270,7 +270,7 @@ a legit label.
 To know what the class of a given exception is, we just need to extract the
 label, for instance with a regex.
 
-### Class Inheritance
+## Class Inheritance
 
 Inheritance is easy, it only requires that standard Perl classes be created to
 map the exception labels, and then Perl usual inheritance can be used.
@@ -279,7 +279,7 @@ So, following our example, we need two packages, `MyException` and
 `MyException::IO`, and `@MyException::IO::ISA` set to `['MyException']`. This can
 be made automatically at exception declaration time.
 
-### Fields
+## Fields
 
 For simplicity, `Exception::Stringy` only handles simple field values, that is
 strings and numbers basically. To put fields into our string, we need to be
@@ -296,7 +296,7 @@ or `]`), let's encode them in base64, and mark it as such.
 So, by now, we have fleshed out a string with useful data, which is properly
 parseable, and can be described. Let's add methods to the data now.
 
-### Introspection and Modification
+## Introspection and Modification
 
 Given an exception, it is mandatory to be able to introspect and modify it, namely be able to:
 
@@ -351,7 +351,7 @@ method names are :
     $exception->$xerror()
 {% endhighlight %}
 
-### Launching The Exception
+## Launching The Exception
 
 Finally, once we have created the exception, let's throw it. The first think to
 do is to implement a `throw`or `raise class method on all the exception class,
@@ -370,9 +370,9 @@ We can also use a **pseudo method** on an existing exception to (re)throw it:
     $exception->$xthrow();
 {% endhighlight %}
 
-## Exceptions::Stringy example
+# Exceptions::Stringy example
 
-### Synopsis
+## Synopsis
 
 Below is the synopsis of the `Exceptions::Stringy` module. It's basically a
 wrap up of what has been explained above. The exceptions definition is heavily
@@ -447,7 +447,7 @@ inspired from `Exception::Class`.
 {% endhighlight %}
 
 
-## Conclusion
+# Conclusion
 
 This was an in-depth look at why and how to build up a resilient and
 non-intrusive exception mecanism. I hope to have demonstrated one aspect of the
@@ -456,7 +456,7 @@ extreme flexibility of Perl.
 Feel free to use `Exception::Stringy`, it is being used in production code for
 some time now. Feedback welcome !
 
-## Links
+# Links
 
 [Exception::Stringy]: https://metacpan.org/pod/Exception::Stringy
 [carp]: https://metacpan.org/pod/Carp
