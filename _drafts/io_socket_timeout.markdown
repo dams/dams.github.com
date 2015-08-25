@@ -317,7 +317,7 @@ single inheritance of a special class crafted in real time specificaly for the
 targeted class. The code is short and can be seen here
 https://github.com/dams/io-socket-timeout/blob/master/lib/IO/Socket/Timeout.pm#L187
 
-## Wrapp it up
+## Wrap it up
 
 
 
