@@ -40,7 +40,7 @@ hallways.
 # Best practises - alerting
 - use label and regex to do alert routing
 - page only on user-visible symptoms, not causes
-    - "My Philosophy on Alerting" (see the SRE book or the [google doc](https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/edit))
+- "My Philosophy on Alerting" (see the SRE book or the [google doc](https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/edit))
 - for all jobs: have these 2 basic alerts
   - alert on the prometheus job being up
   - alert if the job is not even there
