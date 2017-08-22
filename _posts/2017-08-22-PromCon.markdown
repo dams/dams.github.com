@@ -24,6 +24,7 @@ hallways.
 - USE method for resources (queues, CPU, disks...): "Utilization, Saturation, Errors"
 - RED method for endpoints and services: "Rate, Errors, Duration"
 
+
 # Best practises - metrics and label naming
 - standardize metric names and labels early on before it's chaos
 - you need conventions
@@ -37,6 +38,7 @@ hallways.
 - more best practises ([website](https://prometheus.io/docs/practices/naming)]
 - when querying counters, don't do `rate(sum())`, because it masks the resets. Do `sum(rate())`
 
+
 # Best practises - alerting
 - use label and regex to do alert routing
 - page only on user-visible symptoms, not causes
@@ -48,11 +50,13 @@ hallways.
 - keep labels when alerting (both recording and alerting rules) to know where it comes from
 - use filtering per job, as metrics are per jobs
 
+
 # Remote storage
 - prometheus provides an API to send/read/write data to a remote storage
 - it also provides a gateway to act as a proxy to other DB like OpenTSDB or
   InfluxDB
 - in real life some people use OpenTSDB, others influxDB
+
 
 # InfluxDB
 - influxDB works fine with remote storage, read/write
@@ -61,6 +65,7 @@ hallways.
   - new QL called Influx Functional Query Language (IFQL)
   - isolate QL, storage, computation, have them on different nodes
   - generate a DAG for queries, and use an execution engine
+
 
 # Exporters
 - telegraf: having one telegraf instance per service is a SPOF, so be careful
@@ -72,6 +77,7 @@ hallways.
 - graphite exporter is easy and useful but it's tricky to get labels exported
   and transformed in graphite metric names in the right way
 
+
 # Alerting tools
 - alert manager deduplicates, so can be used from federated prometheus
 - use jiralert ([github](https://github.com/fabxc/jiralerts)), it'll reopen
@@ -80,9 +86,11 @@ hallways.
   index alerts in ES
 - unsee ([github](https://github.com/cloudflare/unsee)) is a dashboard for alerts
 
+
 # Meta Alerting
 - send one alert on page duty at start of shift, make sure it's received
 - or use grafana for graphing alert manager and to alert about it (basic alerts)
+
 
 # Grafana
 - lots of improvements of the query box (auto complettion, syntax highlighting, etc)
@@ -99,16 +107,19 @@ hallways.
 - grafana data source supports templating so you can change quickly data
   sources when one prometheus instance is down, nice for fault tolerance
 
+
 # Cortex
 - A multitenant, horizontally scalable Prometheus as a Service ([github](https://github.com/weaveworks/cortex))
 - has multiple parts, ingesters, storage, service discovery, read/write query paths
 - storage is implemented through an API so one could use a different storage
+
 
 # Various
 - promgen: a prometheus configuration tool, worth checking
   out ([github](https://github.com/line/promgen))
 - load testing: [Gatling](http://gatling.io/) (scriptable, generate scala code, Akka
   based) vs [JMeter](http://jmeter.apache.org/) (UI oriented, XML, threads)
+
 
 # Prometheus limitations
 - HA issues: when restarting/upgrading prometheus, gaps in data/graph can appear
@@ -117,6 +128,7 @@ hallways.
 - hard time figuring out where the data is located on disk
 - retention issues: you can't specify a disk size, only expiration date; there
   is no downsampling feature, which limit retention capacity
+
 
 # Prometheus v2
 - will use Facebook's Gorilla paper optimization, and Damian Gryski
@@ -127,4 +139,4 @@ hallways.
   prometheus: an embeddable TSDB Go library.
 - alertmanager with HA through gossip protocol and CRDTs using the mesh library
   by Weaveworks ([github](https://github.com/weaveworks/mesh)). It's AP.
-
+- beta avaioable now, stable enough for testing and some level of production use
