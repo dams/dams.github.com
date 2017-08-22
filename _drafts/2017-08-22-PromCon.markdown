@@ -1,0 +1,134 @@
+---
+layout: post
+title: PromCon2017 - Prometheus Conference 2017
+---
+
+# {{ page.title }}
+
+This post is a list of things that I found interesting about Prometheus and its
+ecosystem while attending [https://promcon.io/2017-munich/](PromCon2017, the Prometheus Conference), the 17th and
+18th august 2017 in Munich (Germany). Things are not split per talks; instead I
+have gathered information from all the talks and grouped them by topics, so
+that it's more organised, and easier to read.
+
+The conference was very nice, well organized, and with a good mix of talks:
+technical, less technical, war zone experience, (remotely) related topics and
+products. It was a medium-sized one track conference, which are the one I
+prefer, as one can grasp everything that happens and talk to everybody in the
+hallways.
+
+# Best Practises
+
+## General
+- monitor all metrics from all services, and from all libraries
+- when coding, instead of printing debug messages or sending to log, send
+  metrics!
+- USE method for resources (queues, CPU, disks...): "Utilization, Saturation, Errors"
+- RED method for endpoints and services: "Rate, Errors, Duration"
+
+## Metrics and label naming
+- standardize metric names and labels early on before it's chaos
+- you need conventions
+- add unit suffixes
+- base units (`seconds` vs `milliseconds`, bytes instead of megabytes)
+- add `_total` counter suffixes to differenciate between counters and gauge
+- all the labels of a given metrics should be summable or average-able
+- be carefull about label cardinality
+  - it's OK to ingest millions of series
+  - but one metric should have max 1000 or 10_000 series (labels combinations)
+- more best practises ([https://prometheus.io/docs/practices/naming](website)]
+- when querying counters, don't do `rate(sum())`, because it masks the resets. Do `rate(sum())`
+
+## Alerting
+- use label and regex to do alert routing
+- page only on user-visible symptoms, not causes
+- "My Philosophy on Alerting" ([https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/edit](google doc)
+- for all jobs: have these 2 basic alerts
+  - alert on the prometheus job being up
+  - alert if the job is not even there
+- don't use a too short FOR duration (4 or 5 min) or too long (no persistence between restart)
+- keep labels when alerting (both recording and alerting rules) to know where it comes from
+- use filtering per job, as metrics are per jobs
+
+# Storage
+
+## Remote storage
+- prometheus provides an API to send/read/write data to a remote storage
+- it also provides a gateway to act as a proxy to other DB like OpenTSDB or
+  InfluxDB
+- in real life some people use OpenTSDB, others influxDB
+
+## InfluxDB
+- influxDB works fine with remote storage, read/write
+- influxDB will (once again) change a lot of things
+  - new data model similar to prometheus
+  - new QL called Influx Functional Query Language (IFQL)
+  - isolate QL, storage, computation, have them on different nodes
+  - generate a DAG for queries, and use an execution engine
+
+# Exporters
+- telegraf: having one telegraf instance per service is a SPOF, so be careful
+  and either have redundant telegraf instances or multiple telegrafs per
+  service.
+- useful exporters: node exporters, blackbox (check urls), mtail
+- don't use one exporter to collect more than one service: one thing going
+  crazy won't pollute other metrics collections.
+- graphite exporter is easy and useful but it's tricky to get labels exported
+  and transformed in graphite metric names in the right way
+
+# Alerting tools
+- alert manager deduplicates, so can be used from federated prometheus
+- use jiralert ([https://github.com/fabxc/jiralerts](github)), it'll reopen
+  existing ticket if an alarm is triggered, avoids overcreating tickets.
+- use alertmanager2es ([https://github.com/cloudflare/alertmanager2es](github)) to
+  index alerts in ES
+- unsee ([https://github.com/cloudflare/unsee](github)) is a dashboard for alerts
+
+# Meta Alerting
+- send one alert on page duty at start of shift, make sure it's received
+- or use grafana for graphing alert manager and to alert about it (basic alerts)
+
+# Grafana
+- lots of improvements of the query box (auto complettion, syntax highlighting, etc)
+- improvements of displaying graph, with spread, upper limit points
+- emoji available for quick glimpse at a state
+- table panels available
+- heatmap panel: histogram over time
+- diagram panel: awesome feature to display your pipeline with annotated metrics/colors
+- dashboard version history is available
+- dashboards in git:
+  - currently possible via the grafana lib from cortex
+  - later on will be provided by grafana
+- dashboards folders available
+- grafana data source supports templating so you can change quickly data
+  sources when one prometheus instance is down, nice for fault tolerance
+
+# Cortex
+- A multitenant, horizontally scalable Prometheus as a Service ([https://github.com/weaveworks/cortex](github))
+- has multiple parts, ingesters, storage, service discovery, read/write query paths
+- storage is implemented through an API so one could use a different storage
+
+# Various
+- promgen: a prometheus configuration tool, worth checking
+  out [https://github.com/line/promgen](there)
+- load testing: [http://gatling.io/](Gatling) (scriptable, generate scala code, Akka
+  based) vs [http://jmeter.apache.org/](JMeter) (UI oriented, XML, threads)
+
+# Prometheus limitations
+- HA issues: when restarting/upgrading prometheus, gaps in data/graph can appear
+- there is no horizontal scaling but sharding + federation; can be surprising at first
+- remote storage API and gateway can work around limitation of the local storage
+- hard time figuring out where the data is located on disk
+- retention issues: you can't specify a disk size, only expiration date; there
+  is no downsampling feature, which limit retention capacity
+
+# Prometheus v2
+- will use Facebook's Gorilla paper optimization, and Damian Gryski
+  ([https://github.com/dgryski](github)) implementation
+- prometheus 2 new storage, not a distributed storage but huge improvement in
+  ram, cpu, disk usage
+- libTSDB is the new storage lib for prometheus v2. It can be used outside of
+  prometheus: an embeddable TSDB Go library.
+- alertmanager with HA through gossip protocol and CRDTs using the mesh library
+  by Weaveworks ([https://github.com/weaveworks/mesh](github)). It's AP
+
