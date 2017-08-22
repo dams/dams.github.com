@@ -13,7 +13,7 @@ that it's more organised, and easier to read.
 
 The conference was very nice, well organized, and with a good mix of talks:
 technical, less technical, war zone experience, (remotely) related topics and
-products. It was a medium-sized one track conference, which are the one I
+products. It was a medium-sized one track conference, which are the ones I
 prefer, as one can grasp everything that happens and talk to everybody in the
 hallways.
 
@@ -24,7 +24,7 @@ hallways.
 - USE method for resources (queues, CPU, disks...): "Utilization, Saturation, Errors"
 - RED method for endpoints and services: "Rate, Errors, Duration"
 
-
+<p/>
 # Best practises - metrics and label naming
 - standardize metric names and labels early on before it's chaos
 - you need conventions
@@ -38,7 +38,7 @@ hallways.
 - more best practises ([website](https://prometheus.io/docs/practices/naming)]
 - when querying counters, don't do `rate(sum())`, because it masks the resets. Do `sum(rate())`
 
-
+<p/>
 # Best practises - alerting
 - use label and regex to do alert routing
 - page only on user-visible symptoms, not causes
@@ -50,14 +50,14 @@ hallways.
 - keep labels when alerting (both recording and alerting rules) to know where it comes from
 - use filtering per job, as metrics are per jobs
 
-
+<p/>
 # Remote storage
 - prometheus provides an API to send/read/write data to a remote storage
 - it also provides a gateway to act as a proxy to other DB like OpenTSDB or
   InfluxDB
 - in real life some people use OpenTSDB, others influxDB
 
-
+<p/>
 # InfluxDB
 - influxDB works fine with remote storage, read/write
 - influxDB will (once again) change a lot of things
@@ -66,7 +66,7 @@ hallways.
   - isolate QL, storage, computation, have them on different nodes
   - generate a DAG for queries, and use an execution engine
 
-
+<p/>
 # Exporters
 - telegraf: having one telegraf instance per service is a SPOF, so be careful
   and either have redundant telegraf instances or multiple telegrafs per
@@ -77,7 +77,7 @@ hallways.
 - graphite exporter is easy and useful but it's tricky to get labels exported
   and transformed in graphite metric names in the right way
 
-
+<p/>
 # Alerting tools
 - alert manager deduplicates, so can be used from federated prometheus
 - use jiralert ([github](https://github.com/fabxc/jiralerts)), it'll reopen
@@ -86,12 +86,12 @@ hallways.
   index alerts in ES
 - unsee ([github](https://github.com/cloudflare/unsee)) is a dashboard for alerts
 
-
+<p/>
 # Meta Alerting
 - send one alert on page duty at start of shift, make sure it's received
 - or use grafana for graphing alert manager and to alert about it (basic alerts)
 
-
+<p/>
 # Grafana
 - lots of improvements of the query box (auto complettion, syntax highlighting, etc)
 - improvements of displaying graph, with spread, upper limit points
@@ -107,20 +107,20 @@ hallways.
 - grafana data source supports templating so you can change quickly data
   sources when one prometheus instance is down, nice for fault tolerance
 
-
+<p/>
 # Cortex
 - A multitenant, horizontally scalable Prometheus as a Service ([github](https://github.com/weaveworks/cortex))
 - has multiple parts, ingesters, storage, service discovery, read/write query paths
 - storage is implemented through an API so one could use a different storage
 
-
+<p/>
 # Various
 - promgen: a prometheus configuration tool, worth checking
   out ([github](https://github.com/line/promgen))
 - load testing: [Gatling](http://gatling.io/) (scriptable, generate scala code, Akka
   based) vs [JMeter](http://jmeter.apache.org/) (UI oriented, XML, threads)
 
-
+<p/>
 # Prometheus limitations
 - HA issues: when restarting/upgrading prometheus, gaps in data/graph can appear
 - there is no horizontal scaling but sharding + federation; can be surprising at first
@@ -129,7 +129,7 @@ hallways.
 - retention issues: you can't specify a disk size, only expiration date; there
   is no downsampling feature, which limit retention capacity
 
-
+<p/>
 # Prometheus v2
 - will use Facebook's Gorilla paper optimization, and Damian Gryski
   ([github](https://github.com/dgryski)) implementation
